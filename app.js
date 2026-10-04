@@ -15,7 +15,6 @@ const sb = window.supabase.createClient(
 
 const $ = (id) => document.getElementById(id);
 
-
 const esc = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -57,9 +56,7 @@ function goToPage(pageId) {
       page.classList.remove("active");
     });
 
-
   const target = $(pageId);
-
 
   if (target) {
 
@@ -76,7 +73,7 @@ function goToPage(pageId) {
 
 
 /* =========================================================
-   GALLERY LIGHTBOX VARIABLES
+   GALLERY VARIABLES
    ========================================================= */
 
 let galleryPhotos = [];
@@ -98,7 +95,6 @@ async function loadSettings() {
     .eq("id", 1)
     .single();
 
-
   if (error) {
 
     console.error(
@@ -108,7 +104,6 @@ async function loadSettings() {
 
     return;
   }
-
 
   if (!settings) return;
 
@@ -206,7 +201,6 @@ async function loadSettings() {
     $("phone1").textContent =
       settings.phone_1 || "-";
 
-
     if (settings.phone_1) {
 
       $("phone1").href =
@@ -227,7 +221,6 @@ async function loadSettings() {
 
     $("phone2").textContent =
       settings.phone_2 || "-";
-
 
     if (settings.phone_2) {
 
@@ -316,7 +309,6 @@ async function loadSettings() {
     const history =
       settings.temple_history;
 
-
     if (
       history &&
       history.trim()
@@ -350,7 +342,6 @@ async function loadSettings() {
 
     const welcome =
       $("welcomeBackground");
-
 
     if (welcome) {
 
@@ -859,7 +850,7 @@ function closeGallery() {
 
 
 /* =========================================================
-   KEYBOARD GALLERY CONTROLS
+   KEYBOARD CONTROLS
    ========================================================= */
 
 document.addEventListener(
@@ -1075,17 +1066,13 @@ async function loadGallery() {
     );
 
 
-  /* -------------------------
-     Create lightbox
-     ------------------------- */
-
   createGalleryLightbox();
 
 }
 
 
 /* =========================================================
-   ADD GALLERY STYLES
+   GALLERY STYLES
    ========================================================= */
 
 function addGalleryStyles() {
@@ -1335,3 +1322,226 @@ function addGalleryStyles() {
 
         top: 50%;
 
+        width: 50px;
+
+        height: 50px;
+
+        margin-top: -25px;
+
+        border-radius: 50%;
+
+        font-size: 22px;
+
+      }
+
+
+      .galleryPrev {
+
+        left: 18px;
+
+      }
+
+
+      .galleryNext {
+
+        right: 18px;
+
+      }
+
+
+      .galleryViewerCaption {
+
+        position: absolute;
+
+        left: 20px;
+
+        right: 20px;
+
+        bottom: 45px;
+
+        z-index: 5;
+
+        color: white;
+
+        text-align: center;
+
+        font-size: 17px;
+
+        font-weight: 600;
+
+        text-shadow:
+          0 2px 5px rgba(0,0,0,0.8);
+
+      }
+
+
+      .galleryViewerCounter {
+
+        position: absolute;
+
+        left: 0;
+
+        right: 0;
+
+        bottom: 18px;
+
+        z-index: 5;
+
+        color: rgba(255,255,255,0.8);
+
+        text-align: center;
+
+        font-size: 13px;
+
+      }
+
+
+      body.gallery-open {
+
+        overflow: hidden;
+
+      }
+
+
+      /* =========================================
+         MOBILE
+         ========================================= */
+
+      @media (max-width: 700px) {
+
+        .galleryItem img {
+
+          height: 180px;
+
+        }
+
+
+        .galleryViewer {
+
+          padding:
+            60px 55px 85px;
+
+        }
+
+
+        #galleryViewerImage {
+
+          max-width: 94vw;
+
+          max-height: 72vh;
+
+        }
+
+
+        .galleryClose {
+
+          top: 12px;
+
+          right: 12px;
+
+          width: 42px;
+
+          height: 42px;
+
+          font-size: 20px;
+
+        }
+
+
+        .galleryPrev,
+        .galleryNext {
+
+          width: 42px;
+
+          height: 42px;
+
+          margin-top: -21px;
+
+          font-size: 18px;
+
+        }
+
+
+        .galleryPrev {
+
+          left: 8px;
+
+        }
+
+
+        .galleryNext {
+
+          right: 8px;
+
+        }
+
+
+        .galleryViewerCaption {
+
+          bottom: 43px;
+
+          font-size: 15px;
+
+        }
+
+      }
+
+
+      @media (max-width: 420px) {
+
+        .galleryItem img {
+
+          height: 150px;
+
+        }
+
+        .galleryViewer {
+
+          padding-left: 48px;
+
+          padding-right: 48px;
+
+        }
+
+      }
+
+    `;
+
+
+  document.head.appendChild(
+    style
+  );
+
+}
+
+
+/* =========================================================
+   INITIALIZE WEBSITE
+   ========================================================= */
+
+async function loadWebsite() {
+
+  addGalleryStyles();
+
+  await Promise.all([
+    loadSettings(),
+    loadEvents(),
+    loadNews(),
+    loadGallery()
+  ]);
+
+}
+
+
+/* =========================================================
+   DOM READY
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    loadWebsite();
+
+  }
+);
