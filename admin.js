@@ -1453,9 +1453,88 @@ async function saveHistory() {
   const history =
     $("templeHistory").value.trim();
 
+  showMessage(
+    "historyMsg",
+    "Saving...",
+    true
+  );
+
+  const {
+    error
+  } =
+    await sb
+      .from("site_settings")
+      .update({
+        temple_history: history,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", 1);
+
+  if (error) {
+
+    console.error(
+      "History save error:",
+      error
+    );
+
+    showMessage(
+      "historyMsg",
+      error.message
+    );
+
+    return;
+  }
 
   showMessage(
     "historyMsg",
+    "Temple History saved successfully.",
+    true
+  );
+}
+
+
+/* =========================
+   SAVE TEMPLE SETTINGS
+   ========================= */
+
+async function saveSettings() {
+
+  const updates = {
+
+    temple_name:
+      $("sname").value.trim(),
+
+    location_name:
+      $("slocation").value.trim(),
+
+    tagline:
+      $("stag").value.trim(),
+
+    address:
+      $("saddress").value.trim(),
+
+    phone_1:
+      $("sp1").value.trim(),
+
+    phone_2:
+      $("sp2").value.trim(),
+
+    whatsapp_channel:
+      $("swa").value.trim(),
+
+    instagram:
+      $("sig").value.trim(),
+
+    google_maps:
+      $("smap").value.trim(),
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+
+  showMessage(
+    "setMsg",
     "Saving...",
     true
   );
@@ -1464,4 +1543,369 @@ async function saveHistory() {
   const {
     error
   } =
-    awai
+    await sb
+      .from("site_settings")
+      .update(updates)
+      .eq("id", 1);
+
+
+  if (error) {
+
+    console.error(
+      "Settings save error:",
+      error
+    );
+
+    showMessage(
+      "setMsg",
+      error.message
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "setMsg",
+    "Temple Information saved successfully.",
+    true
+  );
+
+}
+
+
+/* =========================
+   OPENING PHOTO
+   ========================= */
+
+$("heroFile")?.addEventListener(
+  "change",
+  function () {
+
+    const file =
+      this.files[0];
+
+    if (!file) return;
+
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+
+    if (!allowedTypes.includes(
+      file.type
+    )) {
+
+      showMessage(
+        "heroMsg",
+        "Only JPG, PNG and WebP are allowed."
+      );
+
+      this.value = "";
+
+      return;
+    }
+
+
+    if (
+      file.size >
+      10 * 1024 * 1024
+    ) {
+
+      showMessage(
+        "heroMsg",
+        "Photo must be smaller than 10 MB."
+      );
+
+      this.value = "";
+
+      return;
+    }
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function (event) {
+
+        $("heroPreview").src =
+          event.target.result;
+
+        $("heroPreview").classList.add(
+          "visible"
+        );
+
+        $("heroNoPhoto").classList.add(
+          "hidden"
+        );
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
+);
+
+
+/* =========================
+   UPLOAD OPENING PHOTO
+   ========================= */
+
+async function uploadHeroPhoto() {
+
+  const file =
+    $("heroFile").files[0];
+
+
+  if (!file) {
+
+    showMessage(
+      "heroMsg",
+      "Please select an opening photo."
+    );
+
+    return;
+  }
+
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+
+  if (!allowedTypes.includes(
+    file.type
+  )) {
+
+    showMessage(
+      "heroMsg",
+      "Only JPG, PNG and WebP are allowed."
+    );
+
+    return;
+  }
+
+
+  if (
+    file.size >
+    10 * 1024 * 1024
+  ) {
+
+    showMessage(
+      "heroMsg",
+      "Photo must be smaller than 10 MB."
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "heroMsg",
+    "Uploading opening photo...",
+    true
+  );
+
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+
+  const path =
+    `hero/${crypto.randomUUID()}.${extension}`;
+
+
+  const {
+    error: uploadError
+  } =
+    await sb.storage
+      .from("temple-gallery")
+      .upload(
+        path,
+        file,
+        {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        }
+      );
+
+
+  if (uploadError) {
+
+    console.error(
+      "Hero upload error:",
+      uploadError
+    );
+
+    showMessage(
+      "heroMsg",
+      uploadError.message
+    );
+
+    return;
+  }
+
+
+  const {
+    data: publicData
+  } =
+    sb.storage
+      .from("temple-gallery")
+      .getPublicUrl(path);
+
+
+  const imageUrl =
+    publicData.publicUrl;
+
+
+  /* Get old image URL */
+
+  const {
+    data: oldSettings
+  } =
+    await sb
+      .from("site_settings")
+      .select("hero_image")
+      .eq("id", 1)
+      .single();
+
+
+  /* Save new image URL */
+
+  const {
+    error: dbError
+  } =
+    await sb
+      .from("site_settings")
+      .update({
+        hero_image: imageUrl,
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq("id", 1);
+
+
+  if (dbError) {
+
+    /* Remove newly uploaded file */
+
+    await sb.storage
+      .from("temple-gallery")
+      .remove([path]);
+
+
+    console.error(
+      "Hero database error:",
+      dbError
+    );
+
+    showMessage(
+      "heroMsg",
+      dbError.message
+    );
+
+    return;
+  }
+
+
+  /* Delete previous hero file if possible */
+
+  const oldUrl =
+    oldSettings?.hero_image;
+
+
+  if (oldUrl) {
+
+    try {
+
+      const marker =
+        "/storage/v1/object/public/temple-gallery/";
+
+      const index =
+        oldUrl.indexOf(marker);
+
+
+      if (index !== -1) {
+
+        const oldPath =
+          decodeURIComponent(
+            oldUrl.substring(
+              index + marker.length
+            )
+          );
+
+
+        if (
+          oldPath &&
+          oldPath !== path
+        ) {
+
+          await sb.storage
+            .from("temple-gallery")
+            .remove([
+              oldPath
+            ]);
+
+        }
+
+      }
+
+    } catch (cleanupError) {
+
+      console.warn(
+        "Old hero cleanup failed:",
+        cleanupError
+      );
+
+    }
+
+  }
+
+
+  $("heroPreview").src =
+    imageUrl;
+
+  $("heroPreview").classList.add(
+    "visible"
+  );
+
+  $("heroNoPhoto").classList.add(
+    "hidden"
+  );
+
+  $("heroFile").value = "";
+
+
+  showMessage(
+    "heroMsg",
+    "Opening Photo updated successfully.",
+    true
+  );
+
+}
+
+
+/* =========================
+   START ADMIN
+   ========================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    init();
+
+  }
+);
