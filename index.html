@@ -1,32 +1,12 @@
 <!doctype html>
-<html lang="te">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం | సీతయ్యపేట</title>
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-</head>
+<html lang="te"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Temple Admin</title><link rel="stylesheet" href="admin.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../config.js"></script></head>
 <body>
-<header class="top"><div class="wrap nav">
-<a href="#" class="brand">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం<small>సీతయ్యపేట</small></a>
-<nav><a href="#about">ఆలయం</a><a href="#events">కార్యక్రమాలు</a><a href="#gallery">గ్యాలరీ</a><a href="#contact">సంప్రదించండి</a></nav>
-</div></header>
-<main>
-<section class="hero"><div class="overlay"></div><div class="wrap heroText">
-<div class="eyebrow">🙏 అమ్మవారి ఆశీస్సులతో</div><h1 id="templeName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</h1><div class="tagline" id="tagline">“అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే”</div>
-<p>భక్తి • విశ్వాసం • సేవ • ఆధ్యాత్మికత</p><div class="actions"><a class="gold" href="#events">🔱 దసరా మహోత్సవాలు</a><a class="light" href="#contact">📍 ఆలయాన్ని సందర్శించండి</a></div>
-</div></section>
-<section id="about"><div class="wrap"><div class="heading"><span>🙏 అమ్మవారి సన్నిధి</span><h2>భక్తి • విశ్వాసం • సేవ</h2></div><div class="about"><div><h3>శ్రీ అమ్మవారి దివ్య సన్నిధి</h3><p>సీతయ్యపేటలోని శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం భక్తులకు ఆధ్యాత్మిక అనుభూతిని అందించే పవిత్ర సన్నిధి. ఈ వెబ్‌సైట్ ద్వారా ఆలయ కార్యక్రమాలు, ఉత్సవాలు మరియు తాజా సమాచారాన్ని భక్తులకు ఒకే చోట అందించడమే లక్ష్యం.</p></div><div class="quoteBox">“అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే”</div></div></div></section>
-<section id="events" class="cream"><div class="wrap"><div class="heading"><span>🌺 తాజా కార్యక్రమాలు</span><h2>దసరా & ప్రత్యేక ఉత్సవాలు</h2></div><div id="eventsList" class="cards"><p>కార్యక్రమాలను లోడ్ చేస్తోంది…</p></div></div></section>
-<section id="announcements"><div class="wrap"><div class="heading"><span>📢 తాజా సమాచారం</span><h2>ప్రకటనలు</h2></div><div id="newsList" class="cards"><p>ప్రకటనలను లోడ్ చేస్తోంది…</p></div></div></section>
-<section id="gallery" class="cream"><div class="wrap"><div class="heading"><span>📸 దివ్య దర్శనం</span><h2>అమ్మవారి గ్యాలరీ</h2></div><div id="galleryGrid" class="gallery"><p>ఫోటోలను లోడ్ చేస్తోంది…</p></div></div></section>
-<section id="contact"><div class="wrap"><div class="heading"><span>📍 భక్తులకు సమాచారం</span><h2>సంప్రదించండి</h2></div><div class="contactGrid">
-<div class="contactCard"><b>📍 ఆలయ చిరునామా</b><p id="address"></p><a id="mapLink" class="goldBtn" target="_blank">దారి చూపించు</a></div>
-<div class="contactCard"><b>📞 ఫోన్</b><p><a id="phone1"></a><br><a id="phone2"></a></p></div>
-<div class="contactCard"><b>📲 సోషల్ ఛానల్స్</b><p><a id="wa" target="_blank">WhatsApp Channel</a><br><a id="ig" target="_blank">Instagram</a></p></div>
-</div></div></section>
-</main>
-<footer>శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం, సీతయ్యపేట<br><small>“అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే” 🙏</small></footer>
-<script src="app.js"></script>
-</body></html>
+<div id="login" class="login"><div class="loginBox"><h1>🌺 Temple Admin</h1><p>అధికారిక నిర్వాహకుల కోసం</p><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><button onclick="login()">Login</button><div id="loginMsg"></div></div></div>
+<div id="app" class="hidden"><header><b>🌺 Temple Admin</b><button onclick="logout()">Logout</button></header><main>
+<div class="tabs"><button onclick="showTab('events')">📅 Events</button><button onclick="showTab('news')">📢 Announcements</button><button onclick="showTab('gallery')">📸 Gallery</button><button onclick="showTab('settings')">⚙️ Temple Info</button></div>
+<section id="events" class="tab"><h2>Events</h2><div class="form"><input id="etitle" placeholder="Event title (Telugu)"><textarea id="edesc" placeholder="Description"></textarea><input id="edate" type="date"><input id="estart" type="time"><input id="eend" type="time"><input id="elocation" placeholder="Location"><button onclick="addEvent()">+ Add Event</button></div><div id="eventAdmin"></div></section>
+<section id="news" class="tab hidden"><h2>Announcements</h2><div class="form"><input id="ntitle" placeholder="Title (Telugu)"><textarea id="nbody" placeholder="Announcement"></textarea><button onclick="addNews()">+ Publish Announcement</button></div><div id="newsAdmin"></div></section>
+<section id="gallery" class="tab hidden"><h2>Gallery</h2><div class="form"><input id="photoTitle" placeholder="Photo title"><input id="photoFile" type="file" accept="image/*"><button onclick="uploadPhoto()">Upload Photo</button><div id="uploadMsg"></div></div><div id="galleryAdmin" class="adminGallery"></div></section>
+<section id="settings" class="tab hidden"><h2>Temple Information</h2><div class="form"><input id="sname" placeholder="Temple name"><input id="saddress" placeholder="Address"><input id="sp1" placeholder="Phone 1"><input id="sp2" placeholder="Phone 2"><input id="swa" placeholder="WhatsApp URL"><input id="sig" placeholder="Instagram URL"><input id="smap" placeholder="Google Maps URL"><input id="stag" placeholder="Hero tagline"><button onclick="saveSettings()">Save Temple Information</button><div id="setMsg"></div></div></section>
+</main></div><script src="admin.js"></script></body></html>
