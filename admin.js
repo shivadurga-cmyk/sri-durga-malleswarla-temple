@@ -3,202 +3,287 @@ const sb = window.supabase.createClient(
   window.SUPABASE_ANON_KEY
 );
 
-const $ = (id) => document.getElementById(id);
+
+const $ = (id) =>
+  document.getElementById(id);
+
 
 let currentUser = null;
 
 
 /* =========================
    HELPERS
-========================= */
+   ========================= */
 
-function escapeHTML(value) {
-  if (value === null || value === undefined) return "";
+const escapeHTML = (value) =>
+  String(value ?? "").replace(
+    /[&<>"']/g,
+    (m) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[m])
+  );
 
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+function showMessage(
+  elementId,
+  message,
+  success = false
+) {
+
+  const element = $(elementId);
+
+  if (!element) return;
+
+  element.textContent = message;
+
+  element.className =
+    success
+      ? "message success"
+      : "message error";
+
 }
 
-function showMessage(id, message, type = "") {
-  const el = $(id);
 
-  if (!el) return;
+function setLoading(
+  elementId,
+  message = "Loading..."
+) {
 
-  el.textContent = message;
-  el.className = "message " + type;
-}
+  const element = $(elementId);
 
-function setLoading(id, message = "Loading...") {
-  const el = $(id);
-
-  if (el) {
-    el.innerHTML = `<div class="loading">${escapeHTML(message)}</div>`;
+  if (element) {
+    element.innerHTML =
+      `<div class="loading">${message}</div>`;
   }
+
 }
+
 
 function formatDate(date) {
-  if (!date) return "";
 
-  const d = new Date(date);
+  if (!date) return "-";
 
-  if (Number.isNaN(d.getTime())) return date;
-
-  return d.toLocaleDateString("en-IN", {
+  return new Date(
+    date + "T00:00:00"
+  ).toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric"
   });
+
 }
 
 
 /* =========================
    LOGIN
-========================= */
+   ========================= */
 
 async function login() {
 
-  const email = $("email")?.value.trim();
-  const password = $("password")?.value;
+  const email =
+    $("email").value.trim();
+
+  const password =
+    $("password").value;
+
 
   if (!email || !password) {
+
     showMessage(
       "loginMsg",
-      "Please enter your email and password.",
-      "error"
+      "Please enter email and password."
     );
 
     return;
   }
 
-  showMessage("loginMsg", "Logging in...");
 
-  const { error } = await sb.auth.signInWithPassword({
-    email,
-    password
-  });
+  showMessage(
+    "loginMsg",
+    "Logging in...",
+    true
+  );
+
+
+  const {
+    data,
+    error
+  } =
+    await sb.auth.signInWithPassword({
+      email,
+      password
+    });
+
 
   if (error) {
 
     showMessage(
       "loginMsg",
-      error.message,
-      "error"
+      error.message
     );
 
     return;
   }
 
+
+  currentUser =
+    data.user;
+
+
   await init();
+
 }
 
 
 /* =========================
    LOGOUT
-========================= */
+   ========================= */
 
 async function logout() {
 
   await sb.auth.signOut();
 
   location.reload();
+
 }
 
 
 /* =========================
-   INITIALIZE
-========================= */
+   AUTH INIT
+   ========================= */
 
 async function init() {
 
   const {
-    data: { user },
-    error
-  } = await sb.auth.getUser();
+    data: {
+      user
+    }
+  } =
+    await sb.auth.getUser();
 
-  if (error || !user) {
 
-    $("login")?.classList.remove("hidden");
-    $("app")?.classList.add("hidden");
+  if (!user) {
+
+    $("login").classList.remove(
+      "hidden"
+    );
+
+    $("app").classList.add(
+      "hidden"
+    );
 
     return;
   }
+
 
   currentUser = user;
 
+
+  /* Check admin_users */
+
   const {
     data: admin,
-    error: adminError
-  } = await sb
-    .from("admin_users")
-    .select("user_id, display_name")
-    .eq("user_id", user.id)
-    .maybeSingle();
+    error
+  } =
+    await sb
+      .from("admin_users")
+      .select(
+        "user_id, display_name"
+      )
+      .eq(
+        "user_id",
+        user.id
+      )
+      .maybeSingle();
 
-  if (adminError) {
 
-    console.error(adminError);
+  if (error) {
+
+    console.error(
+      "Admin check error:",
+      error
+    );
 
     showMessage(
       "loginMsg",
-      adminError.message,
-      "error"
+      error.message
     );
-
-    await sb.auth.signOut();
 
     return;
   }
+
 
   if (!admin) {
 
+    await sb.auth.signOut();
+
     showMessage(
       "loginMsg",
-      "This account is not an authorized temple admin.",
-      "error"
+      "You are not authorized as an administrator."
     );
-
-    await sb.auth.signOut();
 
     return;
   }
 
-  $("login")?.classList.add("hidden");
-  $("app")?.classList.remove("hidden");
+
+  $("login").classList.add(
+    "hidden"
+  );
+
+  $("app").classList.remove(
+    "hidden"
+  );
+
 
   await loadAll();
+
 }
 
 
 /* =========================
    TABS
-========================= */
+   ========================= */
 
 function showTab(id) {
 
-  document.querySelectorAll(".tab").forEach((tab) => {
-    tab.classList.add("hidden");
-  });
+  document
+    .querySelectorAll(".tab")
+    .forEach((tab) => {
 
-  const selected = $(id);
+      tab.classList.add(
+        "hidden"
+      );
 
-  if (selected) {
-    selected.classList.remove("hidden");
+    });
+
+
+  const target =
+    $(id);
+
+
+  if (target) {
+
+    target.classList.remove(
+      "hidden"
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
   }
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
 }
 
 
 /* =========================
-   LOAD EVERYTHING
-========================= */
+   LOAD ALL
+   ========================= */
 
 async function loadAll() {
 
@@ -208,187 +293,265 @@ async function loadAll() {
     loadGallery(),
     loadSettings()
   ]);
+
 }
 
 
 /* =========================
    EVENTS
-========================= */
+   ========================= */
 
 async function loadEvents() {
 
-  setLoading("eventAdmin", "Loading events...");
+  setLoading(
+    "eventAdmin",
+    "Loading events..."
+  );
+
 
   const {
-    data,
+    data: events,
     error
-  } = await sb
-    .from("events")
-    .select("*")
-    .order("event_date", { ascending: true })
-    .order("sort_order", { ascending: true });
+  } =
+    await sb
+      .from("events")
+      .select("*")
+      .order(
+        "event_date",
+        {
+          ascending: true
+        }
+      )
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
+
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "Events error:",
+      error
+    );
 
     $("eventAdmin").innerHTML =
-      `<div class="row">
-        <b>Unable to load events</b>
-        <p>${escapeHTML(error.message)}</p>
+      `<div class="message error">
+        ${escapeHTML(error.message)}
       </div>`;
 
     return;
   }
 
-  const events = data || [];
 
-  if ($("eventCount")) {
-    $("eventCount").textContent = events.length;
-  }
+  $("eventCount").textContent =
+    events?.length || 0;
 
-  if (!events.length) {
+
+  if (!events || events.length === 0) {
 
     $("eventAdmin").innerHTML =
-      `<div class="loading">No events found.</div>`;
+      `<div class="empty">
+        No events added yet.
+      </div>`;
 
     return;
   }
 
-  $("eventAdmin").innerHTML = events.map((event) => {
 
-    const status = event.published
-      ? "Published"
-      : "Hidden";
+  $("eventAdmin").innerHTML =
+    events
+      .map((event) => {
 
-    return `
-      <div class="row">
+        return `
+          <div class="row">
 
-        <b>${escapeHTML(event.title || "Untitled event")}</b>
+            <b>
+              ${escapeHTML(event.title)}
+            </b>
 
-        <p>
-          📅 ${escapeHTML(formatDate(event.event_date))}
-          ${event.start_time
-            ? ` · ⏰ ${escapeHTML(event.start_time)}`
-            : ""}
-          ${event.end_time
-            ? ` - ${escapeHTML(event.end_time)}`
-            : ""}
-        </p>
+            <span>
+              📅 ${formatDate(event.event_date)}
+            </span>
 
-        ${
-          event.location
-            ? `<p>📍 ${escapeHTML(event.location)}</p>`
-            : ""
-        }
+            ${
+              event.start_time
+                ? `
+                  <span>
+                    🕐 ${escapeHTML(
+                      event.start_time
+                    )}
+                    ${
+                      event.end_time
+                        ? ` – ${escapeHTML(
+                            event.end_time
+                          )}`
+                        : ""
+                    }
+                  </span>
+                `
+                : ""
+            }
 
-        ${
-          event.description
-            ? `<p>${escapeHTML(event.description)}</p>`
-            : ""
-        }
+            ${
+              event.location
+                ? `
+                  <span>
+                    📍 ${escapeHTML(
+                      event.location
+                    )}
+                  </span>
+                `
+                : ""
+            }
 
-        <small>
-          Status: ${escapeHTML(status)}
-        </small>
+            ${
+              event.description
+                ? `
+                  <p>
+                    ${escapeHTML(
+                      event.description
+                    )}
+                  </p>
+                `
+                : ""
+            }
 
-        <br>
+            <span class="status">
+              ${
+                event.published
+                  ? "Published"
+                  : "Hidden"
+              }
+            </span>
 
-        <button
-          onclick="editEvent('${event.id}')"
-        >
-          Edit
-        </button>
+            <div class="rowButtons">
 
-        <button
-          onclick="deleteRow('events','${event.id}',loadEvents)"
-        >
-          Delete
-        </button>
+              <button
+                onclick="editEvent('${event.id}')"
+              >
+                ✏️ Edit
+              </button>
 
-      </div>
-    `;
+              <button
+                class="dangerBtn"
+                onclick="deleteRow('events','${event.id}')"
+              >
+                🗑️ Delete
+              </button>
 
-  }).join("");
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
 }
 
 
 /* =========================
    ADD EVENT
-========================= */
+   ========================= */
 
 async function addEvent() {
 
-  const title = $("etitle")?.value.trim();
-  const description = $("edesc")?.value.trim();
-  const eventDate = $("edate")?.value;
-  const startTime = $("estart")?.value || null;
-  const endTime = $("eend")?.value || null;
-  const location = $("elocation")?.value.trim();
+  const title =
+    $("etitle").value.trim();
 
-  if (!title || !eventDate) {
+  const description =
+    $("edesc").value.trim();
 
-    alert("Event title and date are required.");
+  const event_date =
+    $("edate").value;
+
+  const start_time =
+    $("estart").value;
+
+  const end_time =
+    $("eend").value;
+
+  const location =
+    $("elocation").value.trim();
+
+
+  if (!title) {
+
+    alert("Please enter event title.");
 
     return;
   }
+
+
+  if (!event_date) {
+
+    alert("Please select event date.");
+
+    return;
+  }
+
 
   const {
     error
-  } = await sb
-    .from("events")
-    .insert({
-      title,
-      description,
-      event_date: eventDate,
-      start_time: startTime,
-      end_time: endTime,
-      location,
-      published: true
-    });
+  } =
+    await sb
+      .from("events")
+      .insert({
+        title,
+        description,
+        event_date,
+        start_time:
+          start_time || null,
+        end_time:
+          end_time || null,
+        location,
+        published: true
+      });
+
 
   if (error) {
 
-    alert(error.message);
+    alert(
+      "Could not add event:\n" +
+      error.message
+    );
 
     return;
   }
 
-  [
-    "etitle",
-    "edesc",
-    "edate",
-    "estart",
-    "eend",
-    "elocation"
-  ].forEach((id) => {
 
-    if ($(id)) {
-      $(id).value = "";
-    }
+  $("etitle").value = "";
+  $("edesc").value = "";
+  $("edate").value = "";
+  $("estart").value = "";
+  $("eend").value = "";
+  $("elocation").value = "";
 
-  });
-
-  alert("Event added successfully.");
 
   await loadEvents();
+
 }
 
 
 /* =========================
    EDIT EVENT
-========================= */
+   ========================= */
 
 async function editEvent(id) {
 
   const {
     data: event,
     error
-  } = await sb
-    .from("events")
-    .select("*")
-    .eq("id", id)
-    .single();
+  } =
+    await sb
+      .from("events")
+      .select("*")
+      .eq("id", id)
+      .single();
+
 
   if (error) {
 
@@ -397,55 +560,72 @@ async function editEvent(id) {
     return;
   }
 
-  const title = prompt(
-    "Event title:",
-    event.title || ""
-  );
+
+  const title =
+    prompt(
+      "Event title:",
+      event.title || ""
+    );
+
 
   if (title === null) return;
 
-  const description = prompt(
-    "Description:",
-    event.description || ""
-  );
+
+  const description =
+    prompt(
+      "Description:",
+      event.description || ""
+    );
+
 
   if (description === null) return;
 
-  const location = prompt(
-    "Location:",
-    event.location || ""
-  );
+
+  const location =
+    prompt(
+      "Location:",
+      event.location || ""
+    );
+
 
   if (location === null) return;
 
+
   const {
     error: updateError
-  } = await sb
-    .from("events")
-    .update({
-      title: title.trim(),
-      description: description.trim(),
-      location: location.trim(),
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", id);
+  } =
+    await sb
+      .from("events")
+      .update({
+        title: title.trim(),
+        description:
+          description.trim(),
+        location:
+          location.trim(),
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq("id", id);
+
 
   if (updateError) {
 
-    alert(updateError.message);
+    alert(
+      updateError.message
+    );
 
     return;
   }
 
+
   await loadEvents();
 
-  alert("Event updated successfully.");
 }
 
 
 /* =========================
    ANNOUNCEMENTS
-========================= */
+   ========================= */
 
 async function loadNews() {
 
@@ -454,143 +634,185 @@ async function loadNews() {
     "Loading announcements..."
   );
 
+
   const {
-    data,
+    data: news,
     error
-  } = await sb
-    .from("announcements")
-    .select("*")
-    .order("created_at", {
-      ascending: false
-    });
+  } =
+    await sb
+      .from("announcements")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "News error:",
+      error
+    );
 
     $("newsAdmin").innerHTML =
-      `<div class="row">
-        <b>Unable to load announcements</b>
-        <p>${escapeHTML(error.message)}</p>
+      `<div class="message error">
+        ${escapeHTML(error.message)}
       </div>`;
 
     return;
   }
 
-  const news = data || [];
 
-  if ($("newsCount")) {
-    $("newsCount").textContent = news.length;
-  }
+  $("newsCount").textContent =
+    news?.length || 0;
 
-  if (!news.length) {
+
+  if (!news || news.length === 0) {
 
     $("newsAdmin").innerHTML =
-      `<div class="loading">
-        No announcements found.
+      `<div class="empty">
+        No announcements yet.
       </div>`;
 
     return;
   }
 
-  $("newsAdmin").innerHTML = news.map((item) => {
 
-    return `
-      <div class="row">
+  $("newsAdmin").innerHTML =
+    news
+      .map((item) => {
 
-        <b>${escapeHTML(item.title || "Untitled")}</b>
+        return `
+          <div class="row">
 
-        <p>
-          ${escapeHTML(item.content || "")}
-        </p>
+            <b>
+              ${escapeHTML(item.title)}
+            </b>
 
-        <small>
-          ${item.published ? "Published" : "Hidden"}
-          ·
-          ${escapeHTML(formatDate(item.created_at))}
-        </small>
+            <span>
+              📅 ${
+                item.created_at
+                  ? new Date(
+                      item.created_at
+                    ).toLocaleDateString(
+                      "en-IN"
+                    )
+                  : ""
+              }
+            </span>
 
-        <br>
+            <p>
+              ${escapeHTML(item.content)}
+            </p>
 
-        <button
-          onclick="editNews('${item.id}')"
-        >
-          Edit
-        </button>
+            <span class="status">
+              ${
+                item.published
+                  ? "Published"
+                  : "Hidden"
+              }
+            </span>
 
-        <button
-          onclick="deleteRow('announcements','${item.id}',loadNews)"
-        >
-          Delete
-        </button>
+            <div class="rowButtons">
 
-      </div>
-    `;
+              <button
+                onclick="editNews('${item.id}')"
+              >
+                ✏️ Edit
+              </button>
 
-  }).join("");
+              <button
+                class="dangerBtn"
+                onclick="deleteRow('announcements','${item.id}')"
+              >
+                🗑️ Delete
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
 }
 
 
 /* =========================
    ADD NEWS
-========================= */
+   ========================= */
 
 async function addNews() {
 
-  const title = $("ntitle")?.value.trim();
-  const content = $("nbody")?.value.trim();
+  const title =
+    $("ntitle").value.trim();
+
+  const content =
+    $("nbody").value.trim();
+
 
   if (!title || !content) {
 
     alert(
-      "Announcement title and content are required."
+      "Please enter title and announcement."
     );
 
     return;
   }
 
+
   const {
     error
-  } = await sb
-    .from("announcements")
-    .insert({
-      title,
-      content,
-      published: true
-    });
+  } =
+    await sb
+      .from("announcements")
+      .insert({
+        title,
+        content,
+        published: true
+      });
+
 
   if (error) {
 
-    alert(error.message);
+    alert(
+      "Could not publish announcement:\n" +
+      error.message
+    );
 
     return;
   }
 
+
   $("ntitle").value = "";
   $("nbody").value = "";
 
-  alert(
-    "Announcement published successfully."
-  );
 
   await loadNews();
+
 }
 
 
 /* =========================
    EDIT NEWS
-========================= */
+   ========================= */
 
 async function editNews(id) {
 
   const {
     data: item,
     error
-  } = await sb
-    .from("announcements")
-    .select("*")
-    .eq("id", id)
-    .single();
+  } =
+    await sb
+      .from("announcements")
+      .select("*")
+      .eq("id", id)
+      .single();
+
 
   if (error) {
 
@@ -599,49 +821,59 @@ async function editNews(id) {
     return;
   }
 
-  const title = prompt(
-    "Announcement title:",
-    item.title || ""
-  );
+
+  const title =
+    prompt(
+      "Announcement title:",
+      item.title || ""
+    );
+
 
   if (title === null) return;
 
-  const content = prompt(
-    "Announcement content:",
-    item.content || ""
-  );
+
+  const content =
+    prompt(
+      "Announcement:",
+      item.content || ""
+    );
+
 
   if (content === null) return;
 
+
   const {
     error: updateError
-  } = await sb
-    .from("announcements")
-    .update({
-      title: title.trim(),
-      content: content.trim(),
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", id);
+  } =
+    await sb
+      .from("announcements")
+      .update({
+        title: title.trim(),
+        content: content.trim(),
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq("id", id);
+
 
   if (updateError) {
 
-    alert(updateError.message);
+    alert(
+      updateError.message
+    );
 
     return;
   }
 
+
   await loadNews();
 
-  alert(
-    "Announcement updated successfully."
-  );
 }
 
 
 /* =========================
    GALLERY
-========================= */
+   ========================= */
 
 async function loadGallery() {
 
@@ -650,107 +882,154 @@ async function loadGallery() {
     "Loading gallery..."
   );
 
+
   const {
-    data,
+    data: gallery,
     error
-  } = await sb
-    .from("gallery_photos")
-    .select("*")
-    .order("sort_order", {
-      ascending: true
-    })
-    .order("created_at", {
-      ascending: false
-    });
+  } =
+    await sb
+      .from("gallery_photos")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "Gallery error:",
+      error
+    );
 
     $("galleryAdmin").innerHTML =
-      `<div class="row">
-        <b>Unable to load gallery</b>
-        <p>${escapeHTML(error.message)}</p>
+      `<div class="message error">
+        ${escapeHTML(error.message)}
       </div>`;
 
     return;
   }
 
-  const photos = data || [];
 
-  if ($("galleryCount")) {
-    $("galleryCount").textContent = photos.length;
-  }
+  $("galleryCount").textContent =
+    gallery?.length || 0;
 
-  if (!photos.length) {
+
+  if (!gallery || gallery.length === 0) {
 
     $("galleryAdmin").innerHTML =
-      `<div class="loading">
-        No photos found.
+      `<div class="empty">
+        No gallery photos yet.
       </div>`;
 
     return;
   }
 
-  $("galleryAdmin").innerHTML = photos.map((photo) => {
 
-    return `
-      <div class="galleryCard">
+  $("galleryAdmin").innerHTML =
+    gallery
+      .map((photo) => {
 
-        <img
-          src="${escapeHTML(photo.image_url || "")}"
-          alt="${escapeHTML(photo.title || "Temple photo")}"
-          loading="lazy"
-        >
+        return `
+          <div class="galleryCard">
 
-        <div class="galleryInfo">
+            <img
+              src="${escapeHTML(
+                photo.image_url
+              )}"
+              alt="${escapeHTML(
+                photo.title || ""
+              )}"
+            >
 
-          <b>
-            ${escapeHTML(photo.title || "Untitled photo")}
-          </b>
+            <div class="galleryInfo">
 
-          <small>
-            ${photo.published ? "Published" : "Hidden"}
-          </small>
+              <strong>
+                ${escapeHTML(
+                  photo.title ||
+                  "Untitled"
+                )}
+              </strong>
 
-          <br>
+              <span>
+                ${
+                  photo.published
+                    ? "Published"
+                    : "Hidden"
+                }
+              </span>
 
-          <button
-            onclick="editPhoto('${photo.id}')"
-          >
-            Edit
-          </button>
+              <div class="rowButtons">
 
-          <button
-            onclick="deletePhoto('${photo.id}')"
-          >
-            Delete
-          </button>
+                <button
+                  onclick="editPhoto('${photo.id}')"
+                >
+                  ✏️ Edit
+                </button>
 
-        </div>
+                <button
+                  class="dangerBtn"
+                  onclick="deletePhoto('${photo.id}')"
+                >
+                  🗑️ Delete
+                </button>
 
-      </div>
-    `;
+              </div>
 
-  }).join("");
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join("");
+
 }
 
 
 /* =========================
-   UPLOAD PHOTO
-========================= */
+   UPLOAD GALLERY PHOTO
+   ========================= */
 
 async function uploadPhoto() {
 
-  const file = $("photoFile")?.files[0];
-  const title = $("photoTitle")?.value.trim();
+  const file =
+    $("photoFile").files[0];
+
+  const title =
+    $("photoTitle").value.trim();
+
 
   if (!file) {
 
-    alert("Please choose a photo.");
+    showMessage(
+      "uploadMsg",
+      "Please select a photo."
+    );
 
     return;
   }
+
+
+  if (file.size > 10 * 1024 * 1024) {
+
+    showMessage(
+      "uploadMsg",
+      "Photo must be smaller than 10 MB."
+    );
+
+    return;
+  }
+
 
   const allowedTypes = [
     "image/jpeg",
@@ -758,123 +1037,139 @@ async function uploadPhoto() {
     "image/webp"
   ];
 
-  if (!allowedTypes.includes(file.type)) {
 
-    alert(
-      "Please upload a JPG, PNG or WebP image."
+  if (!allowedTypes.includes(
+    file.type
+  )) {
+
+    showMessage(
+      "uploadMsg",
+      "Only JPG, PNG and WebP are allowed."
     );
 
     return;
   }
 
-  const maxSize = 10 * 1024 * 1024;
-
-  if (file.size > maxSize) {
-
-    alert(
-      "Image size must be less than 10 MB."
-    );
-
-    return;
-  }
 
   showMessage(
     "uploadMsg",
-    "Uploading photo..."
+    "Uploading...",
+    true
   );
 
-  const safeName = file.name
-    .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
 
   const path =
-    `${crypto.randomUUID()}-${safeName}`;
+    `gallery/${crypto.randomUUID()}.${extension}`;
+
 
   const {
     error: uploadError
-  } = await sb
-    .storage
-    .from("temple-gallery")
-    .upload(path, file, {
-      cacheControl: "3600",
-      upsert: false
-    });
+  } =
+    await sb.storage
+      .from("temple-gallery")
+      .upload(
+        path,
+        file,
+        {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        }
+      );
+
 
   if (uploadError) {
 
     showMessage(
       "uploadMsg",
-      uploadError.message,
-      "error"
+      uploadError.message
     );
 
     return;
   }
+
 
   const {
     data: publicData
-  } = sb
-    .storage
-    .from("temple-gallery")
-    .getPublicUrl(path);
+  } =
+    sb.storage
+      .from("temple-gallery")
+      .getPublicUrl(path);
 
-  const imageUrl = publicData.publicUrl;
+
+  const image_url =
+    publicData.publicUrl;
+
 
   const {
-    error: insertError
-  } = await sb
-    .from("gallery_photos")
-    .insert({
-      title: title || "Temple Photo",
-      image_url: imageUrl,
-      storage_path: path,
-      published: true
-    });
-
-  if (insertError) {
-
-    /* Remove uploaded file if database insert fails */
-
+    error: dbError
+  } =
     await sb
-      .storage
+      .from("gallery_photos")
+      .insert({
+        title:
+          title || "Temple Photo",
+        image_url,
+        storage_path: path,
+        published: true
+      });
+
+
+  if (dbError) {
+
+    await sb.storage
       .from("temple-gallery")
       .remove([path]);
 
+
     showMessage(
       "uploadMsg",
-      insertError.message,
-      "error"
+      dbError.message
     );
 
     return;
   }
 
-  $("photoFile").value = "";
+
   $("photoTitle").value = "";
+  $("photoFile").value = "";
+
 
   showMessage(
     "uploadMsg",
     "Photo uploaded successfully.",
-    "success"
+    true
   );
 
+
   await loadGallery();
+
 }
 
 
 /* =========================
-   EDIT PHOTO
-========================= */
+   EDIT GALLERY PHOTO
+   ========================= */
 
 async function editPhoto(id) {
 
   const {
     data: photo,
     error
-  } = await sb
-    .from("gallery_photos")
-    .select("*")
-    .eq("id", id)
-    .single();
+  } =
+    await sb
+      .from("gallery_photos")
+      .select("*")
+      .eq("id", id)
+      .single();
+
 
   if (error) {
 
@@ -883,127 +1178,142 @@ async function editPhoto(id) {
     return;
   }
 
-  const title = prompt(
-    "Photo title:",
-    photo.title || ""
-  );
+
+  const title =
+    prompt(
+      "Photo title:",
+      photo.title || ""
+    );
+
 
   if (title === null) return;
 
+
   const {
     error: updateError
-  } = await sb
-    .from("gallery_photos")
-    .update({
-      title: title.trim()
-    })
-    .eq("id", id);
+  } =
+    await sb
+      .from("gallery_photos")
+      .update({
+        title: title.trim()
+      })
+      .eq("id", id);
+
 
   if (updateError) {
 
-    alert(updateError.message);
+    alert(
+      updateError.message
+    );
 
     return;
   }
 
+
   await loadGallery();
 
-  alert(
-    "Photo title updated successfully."
-  );
 }
 
 
 /* =========================
-   DELETE PHOTO
-========================= */
+   DELETE GALLERY PHOTO
+   ========================= */
 
 async function deletePhoto(id) {
 
-  if (
-    !confirm(
-      "Delete this photo permanently?"
-    )
-  ) {
-    return;
-  }
+  if (!confirm(
+    "Delete this photo?"
+  )) return;
+
 
   const {
     data: photo,
-    error: fetchError
-  } = await sb
-    .from("gallery_photos")
-    .select("storage_path")
-    .eq("id", id)
-    .single();
+    error
+  } =
+    await sb
+      .from("gallery_photos")
+      .select("storage_path")
+      .eq("id", id)
+      .single();
 
-  if (fetchError) {
 
-    alert(fetchError.message);
+  if (error) {
+
+    alert(error.message);
 
     return;
   }
+
 
   if (photo?.storage_path) {
 
     const {
       error: storageError
-    } = await sb
-      .storage
-      .from("temple-gallery")
-      .remove([photo.storage_path]);
+    } =
+      await sb.storage
+        .from("temple-gallery")
+        .remove([
+          photo.storage_path
+        ]);
+
 
     if (storageError) {
 
-      console.warn(
-        "Storage deletion failed:",
-        storageError.message
+      console.error(
+        "Storage delete error:",
+        storageError
       );
+
     }
   }
 
+
   const {
-    error
-  } = await sb
-    .from("gallery_photos")
-    .delete()
-    .eq("id", id);
+    error: deleteError
+  } =
+    await sb
+      .from("gallery_photos")
+      .delete()
+      .eq("id", id);
 
-  if (error) {
 
-    alert(error.message);
+  if (deleteError) {
+
+    alert(
+      deleteError.message
+    );
 
     return;
   }
 
+
   await loadGallery();
+
 }
 
 
 /* =========================
-   DELETE DATABASE ROW
-========================= */
+   GENERIC DELETE
+   ========================= */
 
 async function deleteRow(
   table,
-  id,
-  callback
+  id
 ) {
 
-  if (
-    !confirm(
-      "Delete this item permanently?"
-    )
-  ) {
-    return;
-  }
+  if (!confirm(
+    "Are you sure you want to delete this item?"
+  )) return;
+
 
   const {
     error
-  } = await sb
-    .from(table)
-    .delete()
-    .eq("id", id);
+  } =
+    await sb
+      .from(table)
+      .delete()
+      .eq("id", id);
+
 
   if (error) {
 
@@ -1012,161 +1322,146 @@ async function deleteRow(
     return;
   }
 
-  if (typeof callback === "function") {
-    await callback();
+
+  if (table === "events") {
+
+    await loadEvents();
+
   }
+
+
+  if (table === "announcements") {
+
+    await loadNews();
+
+  }
+
 }
 
 
 /* =========================
-   SITE SETTINGS
-========================= */
+   LOAD SETTINGS
+   ========================= */
 
 async function loadSettings() {
 
   const {
-    data,
+    data: settings,
     error
-  } = await sb
-    .from("site_settings")
-    .select("*")
-    .eq("id", 1)
-    .maybeSingle();
+  } =
+    await sb
+      .from("site_settings")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
 
   if (error) {
 
-    console.error(error);
-
-    showMessage(
-      "setMsg",
-      error.message,
-      "error"
+    console.error(
+      "Settings error:",
+      error
     );
 
     return;
   }
 
-  if (!data) {
 
-    showMessage(
-      "setMsg",
-      "Site settings row with ID 1 was not found.",
-      "error"
+  if (!settings) return;
+
+
+  $("sname").value =
+    settings.temple_name || "";
+
+
+  $("slocation").value =
+    settings.location_name || "";
+
+
+  $("stag").value =
+    settings.tagline || "";
+
+
+  $("saddress").value =
+    settings.address || "";
+
+
+  $("sp1").value =
+    settings.phone_1 || "";
+
+
+  $("sp2").value =
+    settings.phone_2 || "";
+
+
+  $("swa").value =
+    settings.whatsapp_channel || "";
+
+
+  $("sig").value =
+    settings.instagram || "";
+
+
+  $("smap").value =
+    settings.google_maps || "";
+
+
+  /* Temple history */
+
+  $("templeHistory").value =
+    settings.temple_history || "";
+
+
+  /* Opening photo preview */
+
+  if (settings.hero_image) {
+
+    $("heroPreview").src =
+      settings.hero_image;
+
+    $("heroPreview").classList.add(
+      "visible"
     );
 
-    return;
+    $("heroNoPhoto").classList.add(
+      "hidden"
+    );
+
+  } else {
+
+    $("heroPreview").src = "";
+
+    $("heroPreview").classList.remove(
+      "visible"
+    );
+
+    $("heroNoPhoto").classList.remove(
+      "hidden"
+    );
+
   }
 
-  if ($("sname"))
-    $("sname").value = data.temple_name || "";
-
-  if ($("slocation"))
-    $("slocation").value = data.location_name || "";
-
-  if ($("stag"))
-    $("stag").value = data.tagline || "";
-
-  if ($("saddress"))
-    $("saddress").value = data.address || "";
-
-  if ($("sp1"))
-    $("sp1").value = data.phone_1 || "";
-
-  if ($("sp2"))
-    $("sp2").value = data.phone_2 || "";
-
-  if ($("swa"))
-    $("swa").value = data.whatsapp_channel || "";
-
-  if ($("sig"))
-    $("sig").value = data.instagram || "";
-
-  if ($("smap"))
-    $("smap").value = data.google_maps || "";
-
-  if ($("heroImage"))
-    $("heroImage").value = data.hero_image || "";
 }
 
 
 /* =========================
-   SAVE SETTINGS
-========================= */
+   SAVE TEMPLE HISTORY
+   ========================= */
 
-async function saveSettings() {
+async function saveHistory() {
 
-  const settings = {
+  const history =
+    $("templeHistory").value.trim();
 
-    temple_name:
-      $("sname")?.value.trim() || "",
-
-    location_name:
-      $("slocation")?.value.trim() || "",
-
-    tagline:
-      $("stag")?.value.trim() || "",
-
-    address:
-      $("saddress")?.value.trim() || "",
-
-    phone_1:
-      $("sp1")?.value.trim() || "",
-
-    phone_2:
-      $("sp2")?.value.trim() || "",
-
-    whatsapp_channel:
-      $("swa")?.value.trim() || "",
-
-    instagram:
-      $("sig")?.value.trim() || "",
-
-    google_maps:
-      $("smap")?.value.trim() || "",
-
-    hero_image:
-      $("heroImage")?.value.trim() || "",
-
-    updated_at:
-      new Date().toISOString()
-
-  };
 
   showMessage(
-    "setMsg",
-    "Saving..."
+    "historyMsg",
+    "Saving...",
+    true
   );
+
 
   const {
     error
-  } = await sb
-    .from("site_settings")
-    .update(settings)
-    .eq("id", 1);
-
-  if (error) {
-
-    console.error(error);
-
-    showMessage(
-      "setMsg",
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  showMessage(
-    "setMsg",
-    "Settings saved successfully.",
-    "success"
-  );
-}
-
-
-/* =========================
-   START
-========================= */
-
-init();
+  } =
+    awai
