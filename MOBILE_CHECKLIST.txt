@@ -1,0 +1,16 @@
+MOBILE DEPLOY CHECKLIST
+
+[ ] Supabase SQL completed
+[ ] Auth user created
+[ ] Auth user added to admin_users
+[ ] Project URL copied
+[ ] Publishable/Anon key copied
+[ ] config.js updated
+[ ] Files uploaded to GitHub
+[ ] GitHub repo imported into Vercel
+[ ] Public URL opens
+[ ] /admin opens
+[ ] Admin login works
+[ ] Temple Info updated
+[ ] Photos uploaded
+[ ] Confirmed events added
