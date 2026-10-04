@@ -1335,4 +1335,3 @@ function addGalleryStyles() {
 
         top: 50%;
 
-    
