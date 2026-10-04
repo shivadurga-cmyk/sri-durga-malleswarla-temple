@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Temple Admin Dashboard</title>
+
+  <!-- Admin CSS -->
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase configuration -->
+  <script src="config.js"></script>
+</head>
+
+<body>
+
+  <!-- ============================= -->
+  <!-- LOGIN SECTION -->
+  <!-- ============================= -->
+
+  <section id="login" class="login">
+
+    <div class="loginBox">
+
+      <h1>Temple Admin</h1>
+
+      <p>
+        Sri Durga Malleswarla Temple
+      </p>
+
+      <form onsubmit="event.preventDefault(); login();">
+
+        <label for="email">
+          Email
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Admin email"
+          required
+        >
+
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          required
+        >
+
+        <button type="submit">
+          Login
+        </button>
+
+      </form>
+
+      <p id="loginMsg"></p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ============================= -->
+  <!-- ADMIN APPLICATION -->
+  <!-- ============================= -->
+
+  <div id="app" class="hidden">
+
+    <!-- HEADER -->
+
+    <header>
+
+      <div>
+        <h2>Temple Administration</h2>
+        <small>
+          Sri Durga Malleswarla Temple
+        </small>
+      </div>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+
+    </header>
+
+
+    <main>
+
+      <!-- ============================= -->
+      <!-- NAVIGATION TABS -->
+      <!-- ============================= -->
+
+      <div class="tabs">
+
+        <button onclick="showTab('events')">
+          Events
+        </button>
+
+        <button onclick="showTab('news')">
+          Announcements
+        </button>
+
+        <button onclick="showTab('gallery')">
+          Gallery
+        </button>
+
+        <button onclick="showTab('settings')">
+          Settings
+        </button>
+
+      </div>
+
+
+      <!-- ============================= -->
+      <!-- EVENTS -->
+      <!-- ============================= -->
+
+      <section id="events" class="tab">
+
+        <h2>Manage Events</h2>
+
+        <div class="form">
+
+          <label>
+            Event Title
+          </label>
+
+          <input
+            id="etitle"
+            type="text"
+            placeholder="Event title in Telugu"
+          >
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            id="edesc"
+            placeholder="Event description"
+          ></textarea>
+
+          <label>
+            Event Date
+          </label>
+
+          <input
+            id="edate"
+            type="date"
+          >
+
+          <label>
+            Start Time
+          </label>
+
+          <input
+            id="estart"
+            type="time"
+          >
+
+          <label>
+            End Time
+          </label>
+
+          <input
+            id="eend"
+            type="time"
+          >
+
+          <label>
+            Location
+          </label>
+
+          <input
+            id="elocation"
+            type="text"
+            placeholder="Event location"
+          >
+
+          <button onclick="addEvent()">
+            Add Event
+          </button>
+
+        </div>
+
+        <hr>
+
+        <h3>Existing Events</h3>
+
+        <div id="eventAdmin">
+          Loading events...
+        </div>
+
+      </section>
+
+
+      <!-- ============================= -->
+      <!-- ANNOUNCEMENTS -->
+      <!-- ============================= -->
+
+      <section id="news" class="tab hidden">
+
+        <h2>Manage Announcements</h2>
+
+        <div class="form">
+
+          <label>
+            Announcement Title
+          </label>
+
+          <input
+            id="ntitle"
+            type="text"
+            placeholder="Announcement title"
+          >
+
+          <label>
+            Announcement Content
+          </label>
+
+          <textarea
+            id="nbody"
+            placeholder="Announcement details"
+          ></textarea>
+
+          <button onclick="addNews()">
+            Publish Announcement
+          </button>
+
+        </div>
+
+        <hr>
+
+        <h3>Existing Announcements</h3>
+
+        <div id="newsAdmin">
+          Loading announcements...
+        </div>
+
+      </section>
+
+
+      <!-- ============================= -->
+      <!-- GALLERY -->
+      <!-- ============================= -->
+
+      <section id="gallery" class="tab hidden">
+
+        <h2>Temple Gallery</h2>
+
+        <div class="form">
+
+          <label>
+            Photo Title
+          </label>
+
+          <input
+            id="photoTitle"
+            type="text"
+            placeholder="Photo title"
+          >
+
+          <label>
+            Select Photo
+          </label>
+
+          <input
+            id="photoFile"
+            type="file"
+            accept="image/*"
+          >
+
+          <button onclick="uploadPhoto()">
+            Upload Photo
+          </button>
+
+          <p id="uploadMsg"></p>
+
+        </div>
+
+        <hr>
+
+        <h3>Existing Photos</h3>
+
+        <div
+          id="galleryAdmin"
+          class="adminGallery"
+        >
+          Loading gallery...
+        </div>
+
+      </section>
+
+
+      <!-- ============================= -->
+      <!-- SETTINGS -->
+      <!-- ============================= -->
+
+      <section id="settings" class="tab hidden">
+
+        <h2>Temple Website Settings</h2>
+
+        <div class="form">
+
+          <label>
+            Temple Name
+          </label>
+
+          <input
+            id="sname"
+            type="text"
+            placeholder="Temple name"
+          >
+
+          <label>
+            Address
+          </label>
+
+          <textarea
+            id="saddress"
+            placeholder="Temple address"
+          ></textarea>
+
+          <label>
+            Phone Number 1
+          </label>
+
+          <input
+            id="sp1"
+            type="text"
+            placeholder="Phone number"
+          >
+
+          <label>
+            Phone Number 2
+          </label>
+
+          <input
+            id="sp2"
+            type="text"
+            placeholder="Second phone number"
+          >
+
+          <label>
+            WhatsApp URL
+          </label>
+
+          <input
+            id="swa"
+            type="url"
+            placeholder="WhatsApp link"
+          >
+
+          <label>
+            Instagram URL
+          </label>
+
+          <input
+            id="sig"
+            type="url"
+            placeholder="Instagram link"
+          >
+
+          <label>
+            Google Maps URL
+          </label>
+
+          <input
+            id="smap"
+            type="url"
+            placeholder="Google Maps link"
+          >
+
+          <label>
+            Hero Tagline
+          </label>
+
+          <textarea
+            id="stag"
+            placeholder="Website hero tagline"
+          ></textarea>
+
+          <button onclick="saveSettings()">
+            Save Settings
+          </button>
+
+          <p id="setMsg"></p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- ADMIN JAVASCRIPT -->
+  <!-- ============================= -->
+
+  <script src="admin.js"></script>
+
+</body>
+</html>
