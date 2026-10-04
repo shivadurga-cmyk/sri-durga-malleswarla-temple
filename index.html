@@ -14,64 +14,104 @@
 
 <body>
 
-  <!-- ================= HEADER ================= -->
+  <!-- =========================
+       HOME / OPENING SCREEN
+       ========================= -->
 
-  <header class="siteHeader">
-    <div class="container headerInner">
+  <section id="home" class="page active">
 
-      <div class="brand">
-        <div class="brandIcon">🌺</div>
+    <div id="welcomeBackground" class="welcomeBackground"></div>
+    <div class="welcomeOverlay"></div>
 
-        <div>
-          <h1 id="templeName">
-            శ్రీ దుర్గా మల్లేశ్వరాలయం
-          </h1>
+    <div class="welcomeContent">
 
-          <p id="tagline">
-            భక్తి • శక్తి • శాంతి
-          </p>
-        </div>
-      </div>
+      <div class="flower">🌺</div>
 
-      <a href="#contact" class="headerButton">
-        సంప్రదించండి
-      </a>
+      <p class="welcomeSmall">
+        ఓం శ్రీ దుర్గాయై నమః
+      </p>
+
+      <h1 id="welcomeTempleName">
+        శ్రీ దుర్గా మల్లేశ్వరాలయం
+      </h1>
+
+      <p id="welcomeTagline">
+        భక్తి • శక్తి • శాంతి
+      </p>
+
+      <button class="enterButton" onclick="goToPage('intro')">
+        వెబ్‌సైట్‌లోకి ప్రవేశించండి
+        <span>→</span>
+      </button>
 
     </div>
-  </header>
+
+  </section>
 
 
-  <!-- ================= HERO ================= -->
+  <!-- =========================
+       INTRODUCTION
+       ========================= -->
 
-  <section class="hero">
+  <section id="intro" class="page">
 
-    <div class="heroOverlay">
+    <div class="pageContainer">
 
-      <div class="container heroContent">
+      <div class="sectionHeader">
+        <span>🌺</span>
+        <p>స్వాగతం</p>
+        <span>🌺</span>
+      </div>
 
-        <p class="heroSmall">
-          🌺 స్వాగతం 🌺
+      <h2 id="introTempleName">
+        శ్రీ దుర్గా మల్లేశ్వరాలయం
+      </h2>
+
+      <p id="introLocation" class="locationText">
+        -
+      </p>
+
+      <div class="introText">
+
+        <p>
+          అమ్మవారి దివ్య సన్నిధికి భక్తిపూర్వక స్వాగతం.
         </p>
 
-        <h2 id="heroTitle">
-          శ్రీ దుర్గా మల్లేశ్వరాలయం
-        </h2>
-
-        <p id="heroTagline">
-          భక్తితో అమ్మవారిని దర్శించుకోండి
+        <p>
+          ఈ పవిత్ర ఆలయం భక్తులకు ఆధ్యాత్మిక ప్రశాంతత,
+          భక్తి భావం మరియు దైవానుగ్రహాన్ని అందించే
+          పవిత్ర స్థలంగా నిలుస్తోంది.
         </p>
 
-        <div class="heroButtons">
+      </div>
 
-          <a href="#events" class="primaryButton">
-            కార్యక్రమాలు
-          </a>
+      <div class="featureGrid">
 
-          <a href="#gallery" class="secondaryButton">
-            ఫోటో గ్యాలరీ
-          </a>
-
+        <div class="featureCard">
+          <div>🙏</div>
+          <h3>భక్తి</h3>
+          <p>అమ్మవారి పాదసేవలో భక్తితో పాల్గొనండి.</p>
         </div>
+
+        <div class="featureCard">
+          <div>🪔</div>
+          <h3>ఆధ్యాత్మికత</h3>
+          <p>దైవ సన్నిధిలో మనశ్శాంతిని పొందండి.</p>
+        </div>
+
+        <div class="featureCard">
+          <div>🌺</div>
+          <h3>దైవానుగ్రహం</h3>
+          <p>అమ్మవారి ఆశీస్సులను పొందండి.</p>
+        </div>
+
+      </div>
+
+      <div class="navigationButtons">
+
+        <button onclick="goToPage('history')">
+          తదుపరి →
+        </button>
 
       </div>
 
@@ -80,34 +120,83 @@
   </section>
 
 
-  <!-- ================= TEMPLE INFO ================= -->
+  <!-- =========================
+       TEMPLE HISTORY
+       ========================= -->
 
-  <section class="infoSection">
+  <section id="history" class="page">
 
-    <div class="container">
+    <div class="pageContainer">
 
-      <div class="sectionTitle">
+      <div class="sectionHeader">
+        <span>📜</span>
+        <p>ఆలయ చరిత్ర</p>
+        <span>📜</span>
+      </div>
 
-        <span>🌺</span>
+      <h2>
+        శ్రీ దుర్గా మల్లేశ్వరాలయం చరిత్ర
+      </h2>
 
-        <h2>
-          ఆలయ సమాచారం
-        </h2>
+      <div class="historyBox">
 
-        <span>🌺</span>
+        <div class="historyIcon">
+          📜
+        </div>
+
+        <div id="historyContent">
+          <p>
+            ఆలయ చరిత్ర త్వరలో అందుబాటులోకి వస్తుంది.
+          </p>
+        </div>
 
       </div>
+
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('intro')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('info')">
+          తదుపరి →
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       TEMPLE INFORMATION
+       ========================= -->
+
+  <section id="info" class="page">
+
+    <div class="pageContainer">
+
+      <div class="sectionHeader">
+        <span>🛕</span>
+        <p>ఆలయ సమాచారం</p>
+        <span>🛕</span>
+      </div>
+
+      <h2>
+        ఆలయ వివరాలు
+      </h2>
 
       <div class="infoGrid">
 
         <div class="infoCard">
 
-          <div class="infoIcon">📍</div>
+          <div class="largeIcon">📍</div>
 
           <h3>చిరునామా</h3>
 
           <p id="address">
-            ఆలయ చిరునామా
+            -
           </p>
 
         </div>
@@ -115,7 +204,7 @@
 
         <div class="infoCard">
 
-          <div class="infoIcon">📞</div>
+          <div class="largeIcon">📞</div>
 
           <h3>ఫోన్</h3>
 
@@ -136,46 +225,70 @@
 
         <div class="infoCard">
 
-          <div class="infoIcon">🛕</div>
+          <div class="largeIcon">🌺</div>
 
-          <h3>దర్శనం</h3>
+          <h3>ఆలయం</h3>
 
-          <p>
-            భక్తులందరికీ స్వాగతం
+          <p id="locationName">
+            -
           </p>
 
         </div>
 
       </div>
 
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('history')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('events')">
+          తదుపరి →
+        </button>
+
+      </div>
+
     </div>
 
   </section>
 
 
-  <!-- ================= EVENTS ================= -->
+  <!-- =========================
+       EVENTS
+       ========================= -->
 
-  <section id="events" class="contentSection">
+  <section id="events" class="page">
 
-    <div class="container">
+    <div class="pageContainer">
 
-      <div class="sectionTitle">
-
+      <div class="sectionHeader">
         <span>📅</span>
-
-        <h2>
-          ఆలయ కార్యక్రమాలు
-        </h2>
-
+        <p>కార్యక్రమాలు</p>
         <span>📅</span>
-
       </div>
+
+      <h2>
+        ఆలయ కార్యక్రమాలు
+      </h2>
 
       <div id="eventsList" class="cardGrid">
 
-        <p>
+        <div class="loadingText">
           కార్యక్రమాలు లోడ్ అవుతున్నాయి...
-        </p>
+        </div>
+
+      </div>
+
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('info')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('announcements')">
+          తదుపరి →
+        </button>
 
       </div>
 
@@ -184,29 +297,41 @@
   </section>
 
 
-  <!-- ================= ANNOUNCEMENTS ================= -->
+  <!-- =========================
+       ANNOUNCEMENTS
+       ========================= -->
 
-  <section id="announcements" class="contentSection alternate">
+  <section id="announcements" class="page">
 
-    <div class="container">
+    <div class="pageContainer">
 
-      <div class="sectionTitle">
-
+      <div class="sectionHeader">
         <span>📢</span>
-
-        <h2>
-          తాజా ప్రకటనలు
-        </h2>
-
+        <p>ప్రకటనలు</p>
         <span>📢</span>
-
       </div>
+
+      <h2>
+        తాజా ప్రకటనలు
+      </h2>
 
       <div id="newsList" class="cardGrid">
 
-        <p>
+        <div class="loadingText">
           ప్రకటనలు లోడ్ అవుతున్నాయి...
-        </p>
+        </div>
+
+      </div>
+
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('events')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('gallery')">
+          తదుపరి →
+        </button>
 
       </div>
 
@@ -215,29 +340,41 @@
   </section>
 
 
-  <!-- ================= GALLERY ================= -->
+  <!-- =========================
+       GALLERY
+       ========================= -->
 
-  <section id="gallery" class="contentSection">
+  <section id="gallery" class="page">
 
-    <div class="container">
+    <div class="pageContainer">
 
-      <div class="sectionTitle">
-
+      <div class="sectionHeader">
         <span>📸</span>
-
-        <h2>
-          ఫోటో గ్యాలరీ
-        </h2>
-
+        <p>ఫోటో గ్యాలరీ</p>
         <span>📸</span>
-
       </div>
+
+      <h2>
+        ఆలయ ఫోటోలు
+      </h2>
 
       <div id="galleryGrid" class="galleryGrid">
 
-        <p>
+        <div class="loadingText">
           ఫోటోలు లోడ్ అవుతున్నాయి...
-        </p>
+        </div>
+
+      </div>
+
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('announcements')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('contact')">
+          తదుపరి →
+        </button>
 
       </div>
 
@@ -246,46 +383,95 @@
   </section>
 
 
-  <!-- ================= CONTACT ================= -->
+  <!-- =========================
+       CONTACT
+       ========================= -->
 
-  <section id="contact" class="contactSection">
+  <section id="contact" class="page">
 
-    <div class="container">
+    <div class="pageContainer">
 
-      <div class="sectionTitle">
-
-        <span>🌺</span>
-
-        <h2>
-          సంప్రదించండి
-        </h2>
-
-        <span>🌺</span>
-
+      <div class="sectionHeader">
+        <span>📞</span>
+        <p>సంప్రదించండి</p>
+        <span>📞</span>
       </div>
 
-      <div class="contactButtons">
+      <h2>
+        మమ్మల్ని సంప్రదించండి
+      </h2>
+
+      <div class="contactGrid">
+
+        <a id="contactPhone1" href="#" class="contactCard">
+          <span>📞</span>
+          <strong>ఫోన్</strong>
+          <small id="contactPhoneText">-</small>
+        </a>
 
         <a id="mapLink"
            href="#"
            target="_blank"
-           rel="noopener">
-          📍 Google Maps
+           rel="noopener"
+           class="contactCard">
+
+          <span>📍</span>
+          <strong>Google Maps</strong>
+          <small>మార్గం చూడండి</small>
+
         </a>
 
         <a id="wa"
            href="#"
            target="_blank"
-           rel="noopener">
-          💬 WhatsApp
+           rel="noopener"
+           class="contactCard">
+
+          <span>💬</span>
+          <strong>WhatsApp</strong>
+          <small>మాతో సంప్రదించండి</small>
+
         </a>
 
         <a id="ig"
            href="#"
            target="_blank"
-           rel="noopener">
-          📸 Instagram
+           rel="noopener"
+           class="contactCard">
+
+          <span>📸</span>
+          <strong>Instagram</strong>
+          <small>మమ్మల్ని అనుసరించండి</small>
+
         </a>
+
+      </div>
+
+
+      <div class="finalMessage">
+
+        <div>🌺</div>
+
+        <h3>
+          అమ్మవారి ఆశీస్సులు మీకు ఎల్లప్పుడూ ఉండాలి
+        </h3>
+
+        <p>
+          ఓం శ్రీ దుర్గాయై నమః
+        </p>
+
+      </div>
+
+
+      <div class="navigationButtons">
+
+        <button class="backButton" onclick="goToPage('gallery')">
+          ← వెనుకకు
+        </button>
+
+        <button onclick="goToPage('home')">
+          🏠 హోమ్
+        </button>
 
       </div>
 
@@ -294,30 +480,26 @@
   </section>
 
 
-  <!-- ================= FOOTER ================= -->
+  <!-- =========================
+       FOOTER
+       ========================= -->
 
   <footer>
 
-    <div class="container">
+    <h3 id="footerTempleName">
+      శ్రీ దుర్గా మల్లేశ్వరాలయం
+    </h3>
 
-      <h3 id="footerTempleName">
-        శ్రీ దుర్గా మల్లేశ్వరాలయం
-      </h3>
+    <p>
+      <span id="footerLocation">-</span>
+    </p>
 
-      <p id="footerLocation">
-        భక్తి • శక్తి • శాంతి
-      </p>
-
-      <p>
-        © 2026 Sri Durga Malleswarla Temple
-      </p>
-
-    </div>
+    <p>
+      © 2026 Sri Durga Malleswarla Temple
+    </p>
 
   </footer>
 
-
-  <!-- ================= SCRIPT ================= -->
 
   <script src="app.js"></script>
 
