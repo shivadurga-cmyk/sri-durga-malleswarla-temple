@@ -1,25 +1,32 @@
+/* =========================================================
+   SRI DURGA MALLESWARLA TEMPLE
+   PUBLIC WEBSITE - app.js
+   ========================================================= */
+
 const sb = window.supabase.createClient(
   window.SUPABASE_URL,
   window.SUPABASE_ANON_KEY
 );
 
 
-/* =========================
+/* =========================================================
    HELPERS
-   ========================= */
+   ========================================================= */
 
 const $ = (id) => document.getElementById(id);
+
 
 const esc = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
-    (m) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[m])
+    (m) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m])
   );
 
 
@@ -34,12 +41,13 @@ function formatDate(date) {
     month: "short",
     year: "numeric"
   });
+
 }
 
 
-/* =========================
+/* =========================================================
    PAGE NAVIGATION
-   ========================= */
+   ========================================================= */
 
 function goToPage(pageId) {
 
@@ -49,22 +57,35 @@ function goToPage(pageId) {
       page.classList.remove("active");
     });
 
+
   const target = $(pageId);
 
+
   if (target) {
+
     target.classList.add("active");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
   }
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
 }
 
 
-/* =========================
-   LOAD SETTINGS
-   ========================= */
+/* =========================================================
+   GALLERY LIGHTBOX VARIABLES
+   ========================================================= */
+
+let galleryPhotos = [];
+let currentGalleryIndex = 0;
+
+
+/* =========================================================
+   LOAD SITE SETTINGS
+   ========================================================= */
 
 async function loadSettings() {
 
@@ -76,6 +97,7 @@ async function loadSettings() {
     .select("*")
     .eq("id", 1)
     .single();
+
 
   if (error) {
 
@@ -91,72 +113,99 @@ async function loadSettings() {
   if (!settings) return;
 
 
-  /* Temple name */
+  /* -------------------------
+     Temple Name
+     ------------------------- */
 
   if ($("welcomeTempleName")) {
+
     $("welcomeTempleName").textContent =
       settings.temple_name ||
       "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+
   }
 
 
   if ($("introTempleName")) {
+
     $("introTempleName").textContent =
       settings.temple_name ||
       "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+
   }
 
 
   if ($("footerTempleName")) {
+
     $("footerTempleName").textContent =
       settings.temple_name ||
       "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+
   }
 
 
-  /* Tagline */
+  /* -------------------------
+     Tagline
+     ------------------------- */
 
   if ($("welcomeTagline")) {
+
     $("welcomeTagline").textContent =
       settings.tagline ||
       "భక్తి • శక్తి • శాంతి";
+
   }
 
 
-  /* Location */
+  /* -------------------------
+     Location
+     ------------------------- */
 
   if ($("introLocation")) {
+
     $("introLocation").textContent =
       settings.location_name || "";
+
   }
 
 
   if ($("locationName")) {
+
     $("locationName").textContent =
       settings.location_name || "";
+
   }
 
 
   if ($("footerLocation")) {
+
     $("footerLocation").textContent =
       settings.location_name || "";
+
   }
 
 
-  /* Address */
+  /* -------------------------
+     Address
+     ------------------------- */
 
   if ($("address")) {
+
     $("address").textContent =
       settings.address || "-";
+
   }
 
 
-  /* Phone 1 */
+  /* -------------------------
+     Phone 1
+     ------------------------- */
 
   if ($("phone1")) {
 
     $("phone1").textContent =
       settings.phone_1 || "-";
+
 
     if (settings.phone_1) {
 
@@ -166,15 +215,19 @@ async function loadSettings() {
           .replace(/\s+/g, "");
 
     }
+
   }
 
 
-  /* Phone 2 */
+  /* -------------------------
+     Phone 2
+     ------------------------- */
 
   if ($("phone2")) {
 
     $("phone2").textContent =
       settings.phone_2 || "-";
+
 
     if (settings.phone_2) {
 
@@ -184,10 +237,13 @@ async function loadSettings() {
           .replace(/\s+/g, "");
 
     }
+
   }
 
 
-  /* Contact phone */
+  /* -------------------------
+     Contact Phone
+     ------------------------- */
 
   if ($("contactPhone1")) {
 
@@ -203,6 +259,7 @@ async function loadSettings() {
       $("contactPhone1").href = "#";
 
     }
+
   }
 
 
@@ -214,7 +271,9 @@ async function loadSettings() {
   }
 
 
-  /* Google Maps */
+  /* -------------------------
+     Google Maps
+     ------------------------- */
 
   if ($("mapLink")) {
 
@@ -224,7 +283,9 @@ async function loadSettings() {
   }
 
 
-  /* WhatsApp */
+  /* -------------------------
+     WhatsApp
+     ------------------------- */
 
   if ($("wa")) {
 
@@ -234,7 +295,9 @@ async function loadSettings() {
   }
 
 
-  /* Instagram */
+  /* -------------------------
+     Instagram
+     ------------------------- */
 
   if ($("ig")) {
 
@@ -244,39 +307,50 @@ async function loadSettings() {
   }
 
 
-  /* =========================
+  /* =====================================================
      TEMPLE HISTORY
-     ========================= */
+     ===================================================== */
 
   if ($("historyContent")) {
 
     const history =
       settings.temple_history;
 
-    if (history && history.trim()) {
+
+    if (
+      history &&
+      history.trim()
+    ) {
 
       $("historyContent").innerHTML =
-        `<p>${esc(history).replace(/\n/g, "<br>")}</p>`;
+        `<p>${esc(history).replace(
+          /\n/g,
+          "<br>"
+        )}</p>`;
 
     } else {
 
       $("historyContent").innerHTML =
-        `<p>
-          ఆలయ చరిత్ర త్వరలో అందుబాటులోకి వస్తుంది.
-        </p>`;
+        `
+          <p>
+            ఆలయ చరిత్ర త్వరలో అందుబాటులోకి వస్తుంది.
+          </p>
+        `;
 
     }
+
   }
 
 
-  /* =========================
+  /* =====================================================
      OPENING PHOTO
-     ========================= */
+     ===================================================== */
 
   if (settings.hero_image) {
 
     const welcome =
       $("welcomeBackground");
+
 
     if (welcome) {
 
@@ -290,9 +364,9 @@ async function loadSettings() {
 }
 
 
-/* =========================
+/* =========================================================
    LOAD EVENTS
-   ========================= */
+   ========================================================= */
 
 async function loadEvents() {
 
@@ -324,14 +398,20 @@ async function loadEvents() {
   if (!$("eventsList")) return;
 
 
-  if (!events || events.length === 0) {
+  if (
+    !events ||
+    events.length === 0
+  ) {
 
     $("eventsList").innerHTML =
-      `<div class="loadingText">
-        ప్రస్తుతం కార్యక్రమాలు లేవు.
-      </div>`;
+      `
+        <div class="loadingText">
+          ప్రస్తుతం కార్యక్రమాలు లేవు.
+        </div>
+      `;
 
     return;
+
   }
 
 
@@ -398,9 +478,9 @@ async function loadEvents() {
 }
 
 
-/* =========================
+/* =========================================================
    LOAD ANNOUNCEMENTS
-   ========================= */
+   ========================================================= */
 
 async function loadNews() {
 
@@ -430,14 +510,20 @@ async function loadNews() {
   if (!$("newsList")) return;
 
 
-  if (!news || news.length === 0) {
+  if (
+    !news ||
+    news.length === 0
+  ) {
 
     $("newsList").innerHTML =
-      `<div class="loadingText">
-        ప్రస్తుతం ప్రకటనలు లేవు.
-      </div>`;
+      `
+        <div class="loadingText">
+          ప్రస్తుతం ప్రకటనలు లేవు.
+        </div>
+      `;
 
     return;
+
   }
 
 
@@ -453,7 +539,9 @@ async function loadNews() {
                 item.created_at
                   ? new Date(
                       item.created_at
-                    ).toLocaleDateString("te-IN")
+                    ).toLocaleDateString(
+                      "te-IN"
+                    )
                   : ""
               }
             </div>
@@ -475,9 +563,362 @@ async function loadNews() {
 }
 
 
-/* =========================
+/* =========================================================
+   CREATE GALLERY LIGHTBOX
+   ========================================================= */
+
+function createGalleryLightbox() {
+
+  if ($("galleryLightbox")) {
+    return;
+  }
+
+
+  const lightbox =
+    document.createElement("div");
+
+
+  lightbox.id =
+    "galleryLightbox";
+
+
+  lightbox.innerHTML =
+    `
+      <div
+        class="galleryLightboxBackdrop"
+        id="galleryLightboxBackdrop"
+      ></div>
+
+      <div class="galleryViewer">
+
+        <button
+          type="button"
+          class="galleryClose"
+          id="galleryClose"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
+        <button
+          type="button"
+          class="galleryPrev"
+          id="galleryPrev"
+          aria-label="Previous photo"
+        >
+          ❮
+        </button>
+
+        <img
+          id="galleryViewerImage"
+          src=""
+          alt=""
+        >
+
+        <button
+          type="button"
+          class="galleryNext"
+          id="galleryNext"
+          aria-label="Next photo"
+        >
+          ❯
+        </button>
+
+        <div
+          class="galleryViewerCaption"
+          id="galleryViewerCaption"
+        ></div>
+
+        <div
+          class="galleryViewerCounter"
+          id="galleryViewerCounter"
+        ></div>
+
+      </div>
+    `;
+
+
+  document.body.appendChild(
+    lightbox
+  );
+
+
+  /* -------------------------
+     Close
+     ------------------------- */
+
+  $("galleryClose")
+    .addEventListener(
+      "click",
+      closeGallery
+    );
+
+
+  $("galleryLightboxBackdrop")
+    .addEventListener(
+      "click",
+      closeGallery
+    );
+
+
+  /* -------------------------
+     Previous
+     ------------------------- */
+
+  $("galleryPrev")
+    .addEventListener(
+      "click",
+      function (event) {
+
+        event.stopPropagation();
+
+        showGalleryPhoto(
+          currentGalleryIndex - 1
+        );
+
+      }
+    );
+
+
+  /* -------------------------
+     Next
+     ------------------------- */
+
+  $("galleryNext")
+    .addEventListener(
+      "click",
+      function (event) {
+
+        event.stopPropagation();
+
+        showGalleryPhoto(
+          currentGalleryIndex + 1
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   OPEN GALLERY PHOTO
+   ========================================================= */
+
+function openGallery(index) {
+
+  if (
+    !galleryPhotos ||
+    galleryPhotos.length === 0
+  ) {
+    return;
+  }
+
+
+  createGalleryLightbox();
+
+
+  currentGalleryIndex =
+    index;
+
+
+  showGalleryPhoto(
+    currentGalleryIndex
+  );
+
+
+  const lightbox =
+    $("galleryLightbox");
+
+
+  if (lightbox) {
+
+    lightbox.classList.add(
+      "open"
+    );
+
+
+    document.body.classList.add(
+      "gallery-open"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SHOW CURRENT GALLERY PHOTO
+   ========================================================= */
+
+function showGalleryPhoto(index) {
+
+  if (
+    !galleryPhotos ||
+    galleryPhotos.length === 0
+  ) {
+    return;
+  }
+
+
+  if (
+    index < 0
+  ) {
+
+    index =
+      galleryPhotos.length - 1;
+
+  }
+
+
+  if (
+    index >= galleryPhotos.length
+  ) {
+
+    index = 0;
+
+  }
+
+
+  currentGalleryIndex =
+    index;
+
+
+  const photo =
+    galleryPhotos[
+      currentGalleryIndex
+    ];
+
+
+  const image =
+    $("galleryViewerImage");
+
+
+  const caption =
+    $("galleryViewerCaption");
+
+
+  const counter =
+    $("galleryViewerCounter");
+
+
+  if (image) {
+
+    image.src =
+      photo.image_url;
+
+    image.alt =
+      photo.title ||
+      "అమ్మవారి చిత్రం";
+
+  }
+
+
+  if (caption) {
+
+    caption.textContent =
+      photo.title || "";
+
+  }
+
+
+  if (counter) {
+
+    counter.textContent =
+      `${currentGalleryIndex + 1} / ${galleryPhotos.length}`;
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOSE GALLERY
+   ========================================================= */
+
+function closeGallery() {
+
+  const lightbox =
+    $("galleryLightbox");
+
+
+  if (lightbox) {
+
+    lightbox.classList.remove(
+      "open"
+    );
+
+  }
+
+
+  document.body.classList.remove(
+    "gallery-open"
+  );
+
+}
+
+
+/* =========================================================
+   KEYBOARD GALLERY CONTROLS
+   ========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function (event) {
+
+    const lightbox =
+      $("galleryLightbox");
+
+
+    if (
+      !lightbox ||
+      !lightbox.classList.contains("open")
+    ) {
+      return;
+    }
+
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      closeGallery();
+
+      return;
+
+    }
+
+
+    if (
+      event.key === "ArrowLeft"
+    ) {
+
+      showGalleryPhoto(
+        currentGalleryIndex - 1
+      );
+
+      return;
+
+    }
+
+
+    if (
+      event.key === "ArrowRight"
+    ) {
+
+      showGalleryPhoto(
+        currentGalleryIndex + 1
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
    LOAD GALLERY
-   ========================= */
+   ========================================================= */
 
 async function loadGallery() {
 
@@ -486,7 +927,9 @@ async function loadGallery() {
     error
   } = await sb
     .from("gallery_photos")
-    .select("*")
+    .select(
+      "id, title, image_url, storage_path, sort_order, created_at, published"
+    )
     .eq("published", true)
     .order("sort_order", {
       ascending: true
@@ -503,70 +946,393 @@ async function loadGallery() {
       error
     );
 
+
+    if ($("galleryGrid")) {
+
+      $("galleryGrid").innerHTML =
+        `
+          <div class="loadingText">
+            ఫోటోలను లోడ్ చేయడంలో సమస్య ఏర్పడింది.
+          </div>
+        `;
+
+    }
+
+    return;
+
   }
 
 
-  if (!$("galleryGrid")) return;
+  galleryPhotos =
+    gallery || [];
 
 
-  if (!gallery || gallery.length === 0) {
-
-    $("galleryGrid").innerHTML =
-      `<div class="loadingText">
-        ఫోటోలు త్వరలో అందుబాటులోకి వస్తాయి.
-      </div>`;
-
+  if (!$("galleryGrid")) {
     return;
   }
 
 
+  /* -------------------------
+     No photos
+     ------------------------- */
+
+  if (
+    galleryPhotos.length === 0
+  ) {
+
+    $("galleryGrid").innerHTML =
+      `
+        <div class="loadingText">
+          ఫోటోలు త్వరలో అందుబాటులోకి వస్తాయి.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  /* -------------------------
+     Gallery cards
+     ------------------------- */
+
   $("galleryGrid").innerHTML =
-    gallery
-      .map((photo) => {
+    galleryPhotos
+      .map(
+        (photo, index) => {
 
-        return `
-          <img
-            src="${esc(photo.image_url)}"
-            alt="${esc(
-              photo.title ||
-              "అమ్మవారి చిత్రం"
-            )}"
-            loading="lazy"
-          >
-        `;
+          return `
+            <button
+              type="button"
+              class="galleryItem"
+              data-gallery-index="${index}"
+              aria-label="${
+                esc(
+                  photo.title ||
+                  "Open photo"
+                )
+              }"
+            >
 
-      })
+              <img
+                src="${esc(
+                  photo.image_url
+                )}"
+                alt="${esc(
+                  photo.title ||
+                  "అమ్మవారి చిత్రం"
+                )}"
+                loading="lazy"
+              >
+
+              ${
+                photo.title
+                  ? `
+                    <span class="galleryTitle">
+                      ${esc(
+                        photo.title
+                      )}
+                    </span>
+                  `
+                  : ""
+              }
+
+            </button>
+          `;
+
+        }
+      )
       .join("");
 
+
+  /* -------------------------
+     Add click events
+     ------------------------- */
+
+  document
+    .querySelectorAll(
+      ".galleryItem"
+    )
+    .forEach(
+      (item) => {
+
+        item.addEventListener(
+          "click",
+          function () {
+
+            const index =
+              Number(
+                this.dataset.galleryIndex
+              );
+
+
+            openGallery(index);
+
+          }
+        );
+
+      }
+    );
+
+
+  /* -------------------------
+     Create lightbox
+     ------------------------- */
+
+  createGalleryLightbox();
+
 }
 
 
-/* =========================
-   LOAD EVERYTHING
-   ========================= */
+/* =========================================================
+   ADD GALLERY STYLES
+   ========================================================= */
 
-async function load() {
+function addGalleryStyles() {
 
-  await loadSettings();
-
-  await Promise.all([
-    loadEvents(),
-    loadNews(),
-    loadGallery()
-  ]);
-
-}
+  if ($("galleryDynamicStyles")) {
+    return;
+  }
 
 
-/* =========================
-   START
-   ========================= */
+  const style =
+    document.createElement("style");
 
-load().catch((error) => {
 
-  console.error(
-    "Website loading error:",
-    error
-  );
+  style.id =
+    "galleryDynamicStyles";
 
-});
+
+  style.textContent =
+    `
+      /* =========================================
+         PUBLIC PHOTO GALLERY
+         ========================================= */
+
+      .galleryItem {
+
+        position: relative;
+
+        display: block;
+
+        width: 100%;
+
+        padding: 0;
+
+        border: 0;
+
+        background: transparent;
+
+        cursor: pointer;
+
+        overflow: hidden;
+
+        border-radius: 14px;
+
+      }
+
+
+      .galleryItem img {
+
+        display: block;
+
+        width: 100%;
+
+        height: 220px;
+
+        object-fit: cover;
+
+        transition:
+          transform 0.35s ease,
+          filter 0.35s ease;
+
+      }
+
+
+      .galleryItem:hover img {
+
+        transform: scale(1.05);
+
+        filter: brightness(0.88);
+
+      }
+
+
+      .galleryTitle {
+
+        position: absolute;
+
+        left: 0;
+
+        right: 0;
+
+        bottom: 0;
+
+        padding: 10px;
+
+        color: white;
+
+        background:
+          linear-gradient(
+            transparent,
+            rgba(0,0,0,0.78)
+          );
+
+        text-align: left;
+
+        font-size: 14px;
+
+      }
+
+
+      /* =========================================
+         LIGHTBOX
+         ========================================= */
+
+      #galleryLightbox {
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 99999;
+
+        display: none;
+
+        align-items: center;
+
+        justify-content: center;
+
+      }
+
+
+      #galleryLightbox.open {
+
+        display: flex;
+
+      }
+
+
+      .galleryLightboxBackdrop {
+
+        position: absolute;
+
+        inset: 0;
+
+        background:
+          rgba(0,0,0,0.94);
+
+      }
+
+
+      .galleryViewer {
+
+        position: relative;
+
+        z-index: 2;
+
+        width: 100%;
+
+        height: 100%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 70px 70px 90px;
+
+      }
+
+
+      #galleryViewerImage {
+
+        max-width: 92vw;
+
+        max-height: 82vh;
+
+        width: auto;
+
+        height: auto;
+
+        object-fit: contain;
+
+        border-radius: 8px;
+
+        box-shadow:
+          0 15px 60px
+          rgba(0,0,0,0.7);
+
+        user-select: none;
+
+        -webkit-user-drag: none;
+
+      }
+
+
+      .galleryClose,
+      .galleryPrev,
+      .galleryNext {
+
+        position: absolute;
+
+        z-index: 5;
+
+        border: 0;
+
+        color: white;
+
+        background:
+          rgba(0,0,0,0.55);
+
+        cursor: pointer;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+
+      }
+
+
+      .galleryClose:hover,
+      .galleryPrev:hover,
+      .galleryNext:hover {
+
+        background:
+          rgba(255,255,255,0.22);
+
+        transform: scale(1.08);
+
+      }
+
+
+      .galleryClose {
+
+        top: 20px;
+
+        right: 20px;
+
+        width: 46px;
+
+        height: 46px;
+
+        border-radius: 50%;
+
+        font-size: 24px;
+
+      }
+
+
+      .galleryPrev,
+      .galleryNext {
+
+        top: 50%;
+
+    
