@@ -1,12 +1,325 @@
 <!doctype html>
-<html lang="te"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Temple Admin</title><link rel="stylesheet" href="admin.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../config.js"></script></head>
+<html lang="te">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Sri Durga Malleswarla Temple</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+
 <body>
-<div id="login" class="login"><div class="loginBox"><h1>🌺 Temple Admin</h1><p>అధికారిక నిర్వాహకుల కోసం</p><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><button onclick="login()">Login</button><div id="loginMsg"></div></div></div>
-<div id="app" class="hidden"><header><b>🌺 Temple Admin</b><button onclick="logout()">Logout</button></header><main>
-<div class="tabs"><button onclick="showTab('events')">📅 Events</button><button onclick="showTab('news')">📢 Announcements</button><button onclick="showTab('gallery')">📸 Gallery</button><button onclick="showTab('settings')">⚙️ Temple Info</button></div>
-<section id="events" class="tab"><h2>Events</h2><div class="form"><input id="etitle" placeholder="Event title (Telugu)"><textarea id="edesc" placeholder="Description"></textarea><input id="edate" type="date"><input id="estart" type="time"><input id="eend" type="time"><input id="elocation" placeholder="Location"><button onclick="addEvent()">+ Add Event</button></div><div id="eventAdmin"></div></section>
-<section id="news" class="tab hidden"><h2>Announcements</h2><div class="form"><input id="ntitle" placeholder="Title (Telugu)"><textarea id="nbody" placeholder="Announcement"></textarea><button onclick="addNews()">+ Publish Announcement</button></div><div id="newsAdmin"></div></section>
-<section id="gallery" class="tab hidden"><h2>Gallery</h2><div class="form"><input id="photoTitle" placeholder="Photo title"><input id="photoFile" type="file" accept="image/*"><button onclick="uploadPhoto()">Upload Photo</button><div id="uploadMsg"></div></div><div id="galleryAdmin" class="adminGallery"></div></section>
-<section id="settings" class="tab hidden"><h2>Temple Information</h2><div class="form"><input id="sname" placeholder="Temple name"><input id="saddress" placeholder="Address"><input id="sp1" placeholder="Phone 1"><input id="sp2" placeholder="Phone 2"><input id="swa" placeholder="WhatsApp URL"><input id="sig" placeholder="Instagram URL"><input id="smap" placeholder="Google Maps URL"><input id="stag" placeholder="Hero tagline"><button onclick="saveSettings()">Save Temple Information</button><div id="setMsg"></div></div></section>
-</main></div><script src="admin.js"></script></body></html>
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="siteHeader">
+    <div class="container headerInner">
+
+      <div class="brand">
+        <div class="brandIcon">🌺</div>
+
+        <div>
+          <h1 id="templeName">
+            శ్రీ దుర్గా మల్లేశ్వరాలయం
+          </h1>
+
+          <p id="tagline">
+            భక్తి • శక్తి • శాంతి
+          </p>
+        </div>
+      </div>
+
+      <a href="#contact" class="headerButton">
+        సంప్రదించండి
+      </a>
+
+    </div>
+  </header>
+
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero">
+
+    <div class="heroOverlay">
+
+      <div class="container heroContent">
+
+        <p class="heroSmall">
+          🌺 స్వాగతం 🌺
+        </p>
+
+        <h2 id="heroTitle">
+          శ్రీ దుర్గా మల్లేశ్వరాలయం
+        </h2>
+
+        <p id="heroTagline">
+          భక్తితో అమ్మవారిని దర్శించుకోండి
+        </p>
+
+        <div class="heroButtons">
+
+          <a href="#events" class="primaryButton">
+            కార్యక్రమాలు
+          </a>
+
+          <a href="#gallery" class="secondaryButton">
+            ఫోటో గ్యాలరీ
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= TEMPLE INFO ================= -->
+
+  <section class="infoSection">
+
+    <div class="container">
+
+      <div class="sectionTitle">
+
+        <span>🌺</span>
+
+        <h2>
+          ఆలయ సమాచారం
+        </h2>
+
+        <span>🌺</span>
+
+      </div>
+
+      <div class="infoGrid">
+
+        <div class="infoCard">
+
+          <div class="infoIcon">📍</div>
+
+          <h3>చిరునామా</h3>
+
+          <p id="address">
+            ఆలయ చిరునామా
+          </p>
+
+        </div>
+
+
+        <div class="infoCard">
+
+          <div class="infoIcon">📞</div>
+
+          <h3>ఫోన్</h3>
+
+          <p>
+            <a id="phone1" href="#">
+              -
+            </a>
+          </p>
+
+          <p>
+            <a id="phone2" href="#">
+              -
+            </a>
+          </p>
+
+        </div>
+
+
+        <div class="infoCard">
+
+          <div class="infoIcon">🛕</div>
+
+          <h3>దర్శనం</h3>
+
+          <p>
+            భక్తులందరికీ స్వాగతం
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= EVENTS ================= -->
+
+  <section id="events" class="contentSection">
+
+    <div class="container">
+
+      <div class="sectionTitle">
+
+        <span>📅</span>
+
+        <h2>
+          ఆలయ కార్యక్రమాలు
+        </h2>
+
+        <span>📅</span>
+
+      </div>
+
+      <div id="eventsList" class="cardGrid">
+
+        <p>
+          కార్యక్రమాలు లోడ్ అవుతున్నాయి...
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= ANNOUNCEMENTS ================= -->
+
+  <section id="announcements" class="contentSection alternate">
+
+    <div class="container">
+
+      <div class="sectionTitle">
+
+        <span>📢</span>
+
+        <h2>
+          తాజా ప్రకటనలు
+        </h2>
+
+        <span>📢</span>
+
+      </div>
+
+      <div id="newsList" class="cardGrid">
+
+        <p>
+          ప్రకటనలు లోడ్ అవుతున్నాయి...
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= GALLERY ================= -->
+
+  <section id="gallery" class="contentSection">
+
+    <div class="container">
+
+      <div class="sectionTitle">
+
+        <span>📸</span>
+
+        <h2>
+          ఫోటో గ్యాలరీ
+        </h2>
+
+        <span>📸</span>
+
+      </div>
+
+      <div id="galleryGrid" class="galleryGrid">
+
+        <p>
+          ఫోటోలు లోడ్ అవుతున్నాయి...
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= CONTACT ================= -->
+
+  <section id="contact" class="contactSection">
+
+    <div class="container">
+
+      <div class="sectionTitle">
+
+        <span>🌺</span>
+
+        <h2>
+          సంప్రదించండి
+        </h2>
+
+        <span>🌺</span>
+
+      </div>
+
+      <div class="contactButtons">
+
+        <a id="mapLink"
+           href="#"
+           target="_blank"
+           rel="noopener">
+          📍 Google Maps
+        </a>
+
+        <a id="wa"
+           href="#"
+           target="_blank"
+           rel="noopener">
+          💬 WhatsApp
+        </a>
+
+        <a id="ig"
+           href="#"
+           target="_blank"
+           rel="noopener">
+          📸 Instagram
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <h3 id="footerTempleName">
+        శ్రీ దుర్గా మల్లేశ్వరాలయం
+      </h3>
+
+      <p id="footerLocation">
+        భక్తి • శక్తి • శాంతి
+      </p>
+
+      <p>
+        © 2026 Sri Durga Malleswarla Temple
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ================= SCRIPT ================= -->
+
+  <script src="app.js"></script>
+
+</body>
+</html>
