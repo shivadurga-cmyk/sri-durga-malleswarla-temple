@@ -18,13 +18,14 @@ let currentUser = null;
 const escapeHTML = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
-    (m) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[m])
+    (m) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[m])
   );
 
 
