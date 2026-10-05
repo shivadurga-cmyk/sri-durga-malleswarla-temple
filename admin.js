@@ -58,7 +58,7 @@ function setLoading(
 
   if (element) {
     element.innerHTML =
-      `<div class="loading">${message}</div>`;
+      `<div class="loading">${escapeHTML(message)}</div>`;
   }
 
 }
