@@ -559,6 +559,53 @@
             ></textarea>
 
           </div>
+          <div class="photo-upload-box">
+  <h3>Temple History Photo</h3>
+
+  <img id="historyPhotoPreview"
+       style="max-width:300px;display:block;margin:10px 0;">
+
+  <input type="file"
+         id="historyPhotoFile"
+         accept="image/*">
+
+  <button type="button"
+          id="chooseHistoryPhoto"
+          class="refreshBtn">
+    Choose Existing Gallery Photo
+  </button>
+
+  <p id="historyPhotoMsg"></p>
+          </div>
+          <div class="photo-upload-box">
+  <h3>Temple Information Photo</h3>
+
+  <img id="informationPhotoPreview"
+       style="max-width:300px;display:block;margin:10px 0;">
+
+  <input type="file"
+         id="informationPhotoFile"
+         accept="image/*">
+
+  <button type="button"
+          id="chooseInformationPhoto"
+          class="refreshBtn">
+    Choose Existing Gallery Photo
+  </button>
+
+  <p id="informationPhotoMsg"></p>
+          </div>
+          <div id="photoLibrary"
+     style="display:none;">
+  <div>
+    <h2>Choose a Gallery Photo</h2>
+    <div id="photoLibraryGrid"></div>
+    <button type="button"
+            onclick="document.getElementById('photoLibrary').style.display='none'">
+      Close
+    </button>
+  </div>
+          </div>
 
 
           <button
@@ -603,6 +650,9 @@
         id="heroFile"
         accept="image/jpeg,image/png,image/webp"
       />
+      <button type="button" id="chooseHeroPhoto" class="refreshBtn">
+  Choose Existing Gallery Photo
+      </button>
 
     </div>
 
@@ -868,6 +918,15 @@
 
 
   <script src="admin.js"></script>
+        <script src="admin-photo-upgrade.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof initPhotoSelectors === "function") {
+    initPhotoSelectors();
+  }
+});
+</script>
 
 </body>
 </html>
