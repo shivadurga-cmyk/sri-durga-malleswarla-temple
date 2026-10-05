@@ -15,6 +15,7 @@ const sb = window.supabase.createClient(
 
 const $ = (id) => document.getElementById(id);
 
+
 const esc = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -27,7 +28,6 @@ const esc = (value) =>
         "'": "&#039;"
       }[m])
   );
-
 
 function formatDate(date) {
 
@@ -116,7 +116,7 @@ async function loadSettings() {
 
     $("welcomeTempleName").textContent =
       settings.temple_name ||
-      "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+      "శ్రీశ్రీశ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం";
 
   }
 
@@ -125,7 +125,8 @@ async function loadSettings() {
 
     $("introTempleName").textContent =
       settings.temple_name ||
-      "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+      "శ్రీశ్రీశ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం";
+     
 
   }
 
@@ -134,7 +135,8 @@ async function loadSettings() {
 
     $("footerTempleName").textContent =
       settings.temple_name ||
-      "శ్రీ దుర్గా మల్లేశ్వరాలయం";
+      "శ్రీశ్రీశ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం";
+
 
   }
 
@@ -147,7 +149,7 @@ async function loadSettings() {
 
     $("welcomeTagline").textContent =
       settings.tagline ||
-      "భక్తి • శక్తి • శాంతి";
+      "అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻";
 
   }
 
