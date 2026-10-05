@@ -1,507 +1,178 @@
-<!doctype html>
-<html lang="te">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sri Durga Malleswarla Ammavari Temple</title>
+  <meta name="description" content="Sri Sri Sri Durgamalleswarla Ammavari Temple">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="welcome" class="welcome-screen">
+    <div class="welcome-overlay"></div>
+    <div class="welcome-content">
+      <div class="temple-symbol">🪔</div>
+      <p class="eyebrow">WELCOME TO</p>
+      <h1 id="welcomeTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</h1>
+      <p id="welcomeTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
+      <button id="exploreBtn" class="gold-btn">Explore Temple <span>↓</span></button>
+    </div>
+  </div>
 
-  <title>Sri Durga Malleswarla Temple</title>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🪔</div>
+      <div>
+        <strong id="sideTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</strong>
+        <small>Temple</small>
+      </div>
+    </div>
 
-  <link rel="stylesheet" href="styles.css">
+    <button class="mobile-close" id="closeMenu" aria-label="Close menu">×</button>
+
+    <nav class="side-nav">
+      <a href="#home" class="nav-link active">⌂ <span>Home</span></a>
+      <a href="#history" class="nav-link">🛕 <span>Temple History</span></a>
+      <a href="#information" class="nav-link">📖 <span>Temple Information</span></a>
+      <a href="#events" class="nav-link">🪔 <span>Events</span></a>
+      <a href="#announcements" class="nav-link">🔔 <span>Announcements</span></a>
+      <a href="#gallery" class="nav-link">📸 <span>Photo Gallery</span></a>
+      <a href="#location" class="nav-link">📍 <span>Location</span></a>
+      <a href="#contact" class="nav-link">☎ <span>Contact</span></a>
+    </nav>
+
+    <a id="mapSideLink" class="map-btn" href="#" target="_blank" rel="noopener noreferrer">📍 View on Google Maps</a>
+  </aside>
+
+  <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+
+  <main class="main">
+    <section id="home" class="hero section">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="section-kicker">DIVINE • PEACE • DEVOTION</span>
+        <h2 id="heroTitle">Welcome to<br><span>శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</span></h2>
+        <p id="heroTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
+        <button class="gold-btn" id="heroExplore">Explore Temple <span>↓</span></button>
+      </div>
+      <div class="hero-bottom">
+        <span>🙏 Jai Ammavaru</span>
+        <span id="heroLocation">Seethayyapeta, Chintapaka, Andhra Pradesh</span>
+      </div>
+    </section>
+
+    <section id="history" class="section content-section textured">
+      <div class="section-inner split">
+        <div class="section-photo">
+          <img id="historyImage" alt="Temple History">
+          <div class="photo-label">Our Sacred Heritage</div>
+        </div>
+        <div class="content-card">
+          <span class="section-kicker">OUR STORY</span>
+          <h2>Temple History</h2>
+          <div id="historyText" class="rich-text">
+            Temple history will appear here. The administrator can edit this content from the Admin Panel.
+          </div>
+          <a href="#information" class="text-link">Know more about the temple →</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="information" class="section info-section">
+      <div class="section-inner">
+        <div class="section-heading">
+          <span class="section-kicker">TEMPLE DETAILS</span>
+          <h2>Temple Information</h2>
+          <p>Discover the temple, its daily worship and important details.</p>
+        </div>
+        <div class="info-grid">
+          <article class="info-card"><span>🪔</span><h3>Daily Pooja</h3><p>Regular worship and devotional activities.</p></article>
+          <article class="info-card"><span>🌺</span><h3>Special Days</h3><p>Special poojas and celebrations are announced here.</p></article>
+          <article class="info-card"><span>⏰</span><h3>Temple Timings</h3><p>Please check the latest temple announcements.</p></article>
+          <article class="info-card"><span>🙏</span><h3>Devotion</h3><p>May Ammavari's blessings be with everyone.</p></article>
+        </div>
+        <div class="information-photo-wrap">
+          <img id="informationImage" alt="Temple Information">
+        </div>
+      </div>
+    </section>
+
+    <section id="events" class="section textured">
+      <div class="section-inner">
+        <div class="section-heading">
+          <span class="section-kicker">JOIN US</span>
+          <h2>Upcoming Events</h2>
+          <p>Temple events and special celebrations.</p>
+        </div>
+        <div id="eventsList" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <section id="announcements" class="section announcement-section">
+      <div class="section-inner">
+        <div class="section-heading">
+          <span class="section-kicker">LATEST</span>
+          <h2>Announcements</h2>
+          <p>Important updates from the temple.</p>
+        </div>
+        <div id="newsList" class="news-list"></div>
+      </div>
+    </section>
+
+    <section id="gallery" class="section gallery-section">
+      <div class="section-inner">
+        <div class="section-heading">
+          <span class="section-kicker">MEMORIES</span>
+          <h2>Photo Gallery</h2>
+          <p>Moments from our temple and celebrations.</p>
+        </div>
+        <div id="galleryGrid" class="gallery-grid"></div>
+      </div>
+    </section>
+
+    <section id="location" class="section location-section">
+      <div class="section-inner location-card">
+        <div>
+          <span class="section-kicker">VISIT US</span>
+          <h2>Temple Location</h2>
+          <p id="addressText">Temple address will appear here.</p>
+          <a id="mapLink" class="gold-btn" href="#" target="_blank" rel="noopener noreferrer">📍 Open Google Maps</a>
+        </div>
+        <div class="location-art">🛕<br><span>🙏</span></div>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact-section">
+      <div class="section-inner">
+        <div class="section-heading">
+          <span class="section-kicker">CONNECT</span>
+          <h2>Contact the Temple</h2>
+        </div>
+        <div class="contact-grid">
+          <a id="phone1" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
+          <a id="phone2" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
+          <a id="phone3" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
+          <a id="whatsappLink" class="contact-card" href="#" target="_blank" rel="noopener noreferrer"><span>💬</span><div><small>WhatsApp</small><strong>Temple Channel</strong></div></a>
+          <a id="instagramLink" class="contact-card" href="#" target="_blank" rel="noopener noreferrer"><span>📷</span><div><small>Instagram</small><strong>Follow Us</strong></div></a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>🪔 <strong id="footerTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</strong></div>
+      <p id="footerTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
+    </footer>
+  </main>
+
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button id="lightboxClose">×</button>
+    <img id="lightboxImage" alt="">
+    <p id="lightboxTitle"></p>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-</head>
-
-<body>
-
-  <!-- =========================
-       HOME / OPENING SCREEN
-       ========================= -->
-
-  <section id="home" class="page active">
-
-    <div id="welcomeBackground" class="welcomeBackground"></div>
-    <div class="welcomeOverlay"></div>
-
-    <div class="welcomeContent">
-
-    
-
-      <p class="welcomeSmall">
-        ఓం శ్రీ దుర్గాయై నమః
-      </p>
-
-      <h1 id="welcomeTempleName">
-        శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం 
-      </h1>
-
-      <p id="welcomeTagline">
-        అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻
-      </p>
-
-      <button class="enterButton" onclick="goToPage('intro')">
-        వెబ్‌సైట్‌లోకి ప్రవేశించండి
-        <span>→</span>
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       INTRODUCTION
-       ========================= -->
-
-  <section id="intro" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>🌺</span>
-        <p>స్వాగతం</p>
-        <span>🌺</span>
-      </div>
-
-      <h2 id="introTempleName">
-        శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం 
-      </h2>
-
-      <p id="introLocation" class="locationText">
-        -
-      </p>
-
-      <div class="introText">
-
-        <p>
-          అమ్మవారి దివ్య సన్నిధికి భక్తిపూర్వక స్వాగతం.
-        </p>
-
-        <p>
-          ఈ పవిత్ర ఆలయం భక్తులకు ఆధ్యాత్మిక ప్రశాంతత,
-          భక్తి భావం మరియు దైవానుగ్రహాన్ని అందించే
-          పవిత్ర స్థలంగా నిలుస్తోంది.
-        </p>
-
-      </div>
-
-      <div class="featureGrid">
-
-        <div class="featureCard">
-          <div>🙏</div>
-          <h3>భక్తి</h3>
-          <p>అమ్మవారి పాదసేవలో భక్తితో పాల్గొనండి.</p>
-        </div>
-
-        <div class="featureCard">
-          <div>🪔</div>
-          <h3>ఆధ్యాత్మికత</h3>
-          <p>దైవ సన్నిధిలో మనశ్శాంతిని పొందండి.</p>
-        </div>
-
-        <div class="featureCard">
-          <div>🌺</div>
-          <h3>దైవానుగ్రహం</h3>
-          <p>అమ్మవారి ఆశీస్సులను పొందండి.</p>
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button onclick="goToPage('history')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       TEMPLE HISTORY
-       ========================= -->
-
-  <section id="history" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>📜</span>
-        <p>ఆలయ చరిత్ర</p>
-        <span>📜</span>
-      </div>
-
-      <h2>
-        శ్రీ దుర్గా మల్లేశ్వరాలయం చరిత్ర
-      </h2>
-
-      <div class="historyBox">
-
-        <div class="historyIcon">
-          📜
-        </div>
-
-        <div id="historyContent">
-          <p>
-            ఆలయ చరిత్ర త్వరలో అందుబాటులోకి వస్తుంది.
-          </p>
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('intro')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('info')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       TEMPLE INFORMATION
-       ========================= -->
-
-  <section id="info" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>🛕</span>
-        <p>ఆలయ సమాచారం</p>
-        <span>🛕</span>
-      </div>
-
-      <h2>
-        ఆలయ వివరాలు
-      </h2>
-
-      <div class="infoGrid">
-
-        <div class="infoCard">
-
-          <div class="largeIcon">📍</div>
-
-          <h3>చిరునామా</h3>
-
-          <p id="address">
-            -
-          </p>
-
-        </div>
-
-
-        <div class="infoCard">
-
-          <div class="largeIcon">📞</div>
-
-          <h3>ఫోన్</h3>
-
-          <p>
-            <a id="phone1" href="#">
-              -
-            </a>
-          </p>
-
-          <p>
-            <a id="phone2" href="#">
-              -
-            </a>
-          </p>
-
-        </div>
-
-
-        <div class="infoCard">
-
-          <div class="largeIcon">🌺</div>
-
-          <h3>ఆలయం</h3>
-
-          <p id="locationName">
-            -
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('history')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('events')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       EVENTS
-       ========================= -->
-
-  <section id="events" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>📅</span>
-        <p>కార్యక్రమాలు</p>
-        <span>📅</span>
-      </div>
-
-      <h2>
-        ఆలయ కార్యక్రమాలు
-      </h2>
-
-      <div id="eventsList" class="cardGrid">
-
-        <div class="loadingText">
-          కార్యక్రమాలు లోడ్ అవుతున్నాయి...
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('info')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('announcements')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       ANNOUNCEMENTS
-       ========================= -->
-
-  <section id="announcements" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>📢</span>
-        <p>ప్రకటనలు</p>
-        <span>📢</span>
-      </div>
-
-      <h2>
-        తాజా ప్రకటనలు
-      </h2>
-
-      <div id="newsList" class="cardGrid">
-
-        <div class="loadingText">
-          ప్రకటనలు లోడ్ అవుతున్నాయి...
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('events')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('gallery')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       GALLERY
-       ========================= -->
-
-  <section id="gallery" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>📸</span>
-        <p>ఫోటో గ్యాలరీ</p>
-        <span>📸</span>
-      </div>
-
-      <h2>
-        ఆలయ ఫోటోలు
-      </h2>
-
-      <div id="galleryGrid" class="galleryGrid">
-
-        <div class="loadingText">
-          ఫోటోలు లోడ్ అవుతున్నాయి...
-        </div>
-
-      </div>
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('announcements')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('contact')">
-          తదుపరి →
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       CONTACT
-       ========================= -->
-
-  <section id="contact" class="page">
-
-    <div class="pageContainer">
-
-      <div class="sectionHeader">
-        <span>📞</span>
-        <p>సంప్రదించండి</p>
-        <span>📞</span>
-      </div>
-
-      <h2>
-        మమ్మల్ని సంప్రదించండి
-      </h2>
-
-      <div class="contactGrid">
-
-        <a id="contactPhone1" href="#" class="contactCard">
-          <span>📞</span>
-          <strong>ఫోన్</strong>
-          <small id="contactPhoneText">-</small>
-        </a>
-
-        <a id="mapLink"
-           href="#"
-           target="_blank"
-           rel="noopener"
-           class="contactCard">
-
-          <span>📍</span>
-          <strong>Google Maps</strong>
-          <small>మార్గం చూడండి</small>
-
-        </a>
-
-        <a id="wa"
-           href="#"
-           target="_blank"
-           rel="noopener"
-           class="contactCard">
-
-          <span>💬</span>
-          <strong>WhatsApp</strong>
-          <small>మాతో సంప్రదించండి</small>
-
-        </a>
-
-        <a id="ig"
-           href="#"
-           target="_blank"
-           rel="noopener"
-           class="contactCard">
-
-          <span>📸</span>
-          <strong>Instagram</strong>
-          <small>మమ్మల్ని అనుసరించండి</small>
-
-        </a>
-
-      </div>
-
-
-      <div class="finalMessage">
-
-        <div>🌺</div>
-
-        <h3>
-          అమ్మవారి ఆశీస్సులు మీకు ఎల్లప్పుడూ ఉండాలి
-        </h3>
-
-        <p>
-          ఓం శ్రీ దుర్గాయై నమః
-        </p>
-
-      </div>
-
-
-      <div class="navigationButtons">
-
-        <button class="backButton" onclick="goToPage('gallery')">
-          ← వెనుకకు
-        </button>
-
-        <button onclick="goToPage('home')">
-          🏠 హోమ్
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       FOOTER
-       ========================= -->
-
-  <footer>
-
-    <h3 id="footerTempleName">
-      శ్రీ దుర్గా మల్లేశ్వరాలయం
-    </h3>
-
-    <p>
-      <span id="footerLocation">-</span>
-    </p>
-
-    <p>
-      © 2026 Sri Durga Malleswarla Temple
-    </p>
-
-  </footer>
-
-
   <script src="app.js"></script>
-
 </body>
 </html>
