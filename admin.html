@@ -558,6 +558,67 @@
         </div>
 
       </section>
+      <!-- =========================
+     OPENING PHOTO
+     ========================= -->
+
+<section id="hero" class="tab hidden">
+
+  <div class="formCard">
+
+    <h2>
+      🖼️ Opening Photo
+    </h2>
+
+    <p class="helpText">
+      ప్రధాన వెబ్‌సైట్‌లో కనిపించే Opening Photo ను ఇక్కడ మార్చవచ్చు.
+    </p>
+
+    <div class="field">
+
+      <label>
+        Opening Photo
+      </label>
+
+      <input
+        type="file"
+        id="heroFile"
+        accept="image/jpeg,image/png,image/webp"
+      />
+
+    </div>
+
+    <div class="heroPreviewBox">
+
+      <img
+        id="heroPreview"
+        alt="Opening Photo Preview"
+      >
+
+      <div
+        id="heroNoPhoto"
+        class="noPhoto"
+      >
+        No opening photo selected
+      </div>
+
+    </div>
+
+    <button
+      class="primaryBtn"
+      onclick="uploadHeroPhoto()"
+    >
+      📤 Upload Opening Photo
+    </button>
+
+    <div
+      id="heroMsg"
+      class="message"
+    ></div>
+
+  </div>
+
+</section>
 
 
       <!-- =========================
