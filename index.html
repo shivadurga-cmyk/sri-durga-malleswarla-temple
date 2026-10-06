@@ -1,178 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sri Durga Malleswarla Ammavari Temple</title>
-  <meta name="description" content="Sri Sri Sri Durgamalleswarla Ammavari Temple">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sri Durga Malleswarla Ammavari Temple</title>
+<meta name="description" content="Sri Sri Sri Durgamalleswarla Ammavari Temple, Seethayyapeta, Chintapaka">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+Telugu:wght@500;700&family=Noto+Sans+Telugu:wght@400;600&family=Poppins:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="welcome" class="welcome-screen">
-    <div class="welcome-overlay"></div>
-    <div class="welcome-content">
-      <div class="temple-symbol">🪔</div>
-      <p class="eyebrow">WELCOME TO</p>
-      <h1 id="welcomeTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</h1>
-      <p id="welcomeTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
-      <button id="exploreBtn" class="gold-btn">Explore Temple <span>↓</span></button>
-    </div>
-  </div>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24"><path d="M4 4h7a2 2 0 0 1 1 .3A2 2 0 0 1 13 4h7v15h-7a2 2 0 0 0-1 1 2 2 0 0 0-1-1H4zM12 4.3V20"/></symbol>
+<symbol id="i-information" viewBox="0 0 24 24"><path d="M12 2l2 3h-4zM8 9l4-4 4 4M6 21V10h12v11M3 21h18M10 21v-5h4v5"/></symbol>
+<symbol id="i-events" viewBox="0 0 24 24"><path d="M5 5h14v15H5zM5 10h14M9 3v4M15 3v4"/></symbol>
+<symbol id="i-announcements" viewBox="0 0 24 24"><path d="M4 10v4h3l7 4V6l-7 4zM18 9a4 4 0 0 1 0 6"/></symbol>
+<symbol id="i-gallery" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M9 9h.01"/></symbol>
+<symbol id="i-contact" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/></symbol>
+<symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4 20l1.5-4A8 8 0 1 1 8 18.5zM9 9c0 3 3 6 6 6l1-2-2-1-1 .5c-1-.5-1.5-1-2-2l.5-1-1-2z"/></symbol>
+<symbol id="i-instagram" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8M17 7h.01"/></symbol>
+<symbol id="i-youtube" viewBox="0 0 24 24"><path d="M3 7h18v10H3zM10 9.5v5l4.5-2.5z"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</defs></svg>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-icon">🪔</div>
-      <div>
-        <strong id="sideTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</strong>
-        <small>Temple</small>
+<header class="topbar">
+  <a class="brand" href="#home">
+    <span class="logo"><svg class="ic"><use href="#i-information"/></svg></span>
+    <span><b class="te" id="brandName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</b><small>SRI DURGA MALLESWARLA TEMPLE</small></span>
+  </a>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">&#9776;</button>
+  <nav id="nav"></nav>
+</header>
+
+<main>
+  <section class="view" id="v-home">
+    <div class="hero" id="heroBg">
+      <div class="hero-text">
+        <h1 class="te" id="heroTitle">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</h1>
+        <p class="en">SRI DURGA MALLESWARLA AMMAVARI TEMPLE</p>
+        <hr><p class="te sub" id="heroTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే</p><hr>
+        <p class="loc" id="heroLocation"></p>
       </div>
     </div>
+    <div class="strip" id="strip"></div>
+    <div class="cards" id="cards"></div>
+  </section>
 
-    <button class="mobile-close" id="closeMenu" aria-label="Close menu">×</button>
+  <section class="view page" id="v-history" hidden>
+    <h2>Temple History</h2><p class="lead">Know our heritage</p>
+    <div class="split"><img id="historyImage" alt="" hidden><div id="historyText" class="prose">Temple history will appear here.</div></div>
+  </section>
 
-    <nav class="side-nav">
-      <a href="#home" class="nav-link active">⌂ <span>Home</span></a>
-      <a href="#history" class="nav-link">🛕 <span>Temple History</span></a>
-      <a href="#information" class="nav-link">📖 <span>Temple Information</span></a>
-      <a href="#events" class="nav-link">🪔 <span>Events</span></a>
-      <a href="#announcements" class="nav-link">🔔 <span>Announcements</span></a>
-      <a href="#gallery" class="nav-link">📸 <span>Photo Gallery</span></a>
-      <a href="#location" class="nav-link">📍 <span>Location</span></a>
-      <a href="#contact" class="nav-link">☎ <span>Contact</span></a>
-    </nav>
+  <section class="view page" id="v-information" hidden>
+    <h2>Temple Information</h2><p class="lead">Timings and facilities</p>
+    <img id="informationImage" class="wide" alt="" hidden>
+    <div class="grid3">
+      <article class="box"><h3>Daily pooja</h3><p>Regular worship and devotional activities.</p></article>
+      <article class="box"><h3>Special days</h3><p>Special poojas and celebrations are announced here.</p></article>
+      <article class="box"><h3>Temple timings</h3><p>Please check the latest announcements.</p></article>
+    </div>
+  </section>
 
-    <a id="mapSideLink" class="map-btn" href="#" target="_blank" rel="noopener noreferrer">📍 View on Google Maps</a>
-  </aside>
+  <section class="view page" id="v-events" hidden>
+    <h2>Events</h2><p class="lead">Upcoming programs</p><div id="eventsList" class="grid3"></div>
+  </section>
 
-  <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  <section class="view page" id="v-announcements" hidden>
+    <h2>Announcements</h2><p class="lead">Latest updates</p><div id="newsList" class="stack"></div>
+  </section>
 
-  <main class="main">
-    <section id="home" class="hero section">
-      <div class="hero-bg" id="heroBg"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <span class="section-kicker">DIVINE • PEACE • DEVOTION</span>
-        <h2 id="heroTitle">Welcome to<br><span>శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</span></h2>
-        <p id="heroTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
-        <button class="gold-btn" id="heroExplore">Explore Temple <span>↓</span></button>
-      </div>
-      <div class="hero-bottom">
-        <span>🙏 Jai Ammavaru</span>
-        <span id="heroLocation">Seethayyapeta, Chintapaka, Andhra Pradesh</span>
-      </div>
-    </section>
+  <section class="view page" id="v-gallery" hidden>
+    <h2>Gallery</h2><p class="lead">Divine moments</p><div id="galleryGrid" class="gallery"></div>
+  </section>
 
-    <section id="history" class="section content-section textured">
-      <div class="section-inner split">
-        <div class="section-photo">
-          <img id="historyImage" alt="Temple History">
-          <div class="photo-label">Our Sacred Heritage</div>
-        </div>
-        <div class="content-card">
-          <span class="section-kicker">OUR STORY</span>
-          <h2>Temple History</h2>
-          <div id="historyText" class="rich-text">
-            Temple history will appear here. The administrator can edit this content from the Admin Panel.
-          </div>
-          <a href="#information" class="text-link">Know more about the temple →</a>
-        </div>
-      </div>
-    </section>
+  <section class="view page" id="v-contact" hidden>
+    <h2>Contact</h2><p class="lead">Get in touch</p>
+    <div class="box addr"><svg class="ic"><use href="#i-pin"/></svg><div><p id="addressText">Temple address will appear here.</p><a id="mapLink" class="btn" target="_blank" rel="noopener" href="#">Open in Google Maps</a></div></div>
+    <div class="grid3">
+      <a id="phone1" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+      <a id="phone2" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+      <a id="phone3" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+    </div>
+  </section>
+</main>
 
-    <section id="information" class="section info-section">
-      <div class="section-inner">
-        <div class="section-heading">
-          <span class="section-kicker">TEMPLE DETAILS</span>
-          <h2>Temple Information</h2>
-          <p>Discover the temple, its daily worship and important details.</p>
-        </div>
-        <div class="info-grid">
-          <article class="info-card"><span>🪔</span><h3>Daily Pooja</h3><p>Regular worship and devotional activities.</p></article>
-          <article class="info-card"><span>🌺</span><h3>Special Days</h3><p>Special poojas and celebrations are announced here.</p></article>
-          <article class="info-card"><span>⏰</span><h3>Temple Timings</h3><p>Please check the latest temple announcements.</p></article>
-          <article class="info-card"><span>🙏</span><h3>Devotion</h3><p>May Ammavari's blessings be with everyone.</p></article>
-        </div>
-        <div class="information-photo-wrap">
-          <img id="informationImage" alt="Temple Information">
-        </div>
-      </div>
-    </section>
+<footer class="foot">
+  <div class="fb"><span class="logo"><svg class="ic"><use href="#i-information"/></svg></span><span><b class="te" id="footerName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</b><small>SRI DURGA MALLESWARLA TEMPLE</small></span></div>
+  <div class="fi"><svg class="ic"><use href="#i-pin"/></svg><span><b>Location</b><span id="footLoc">Seethayyapeta, Chintapaka, Andhra Pradesh</span></span></div>
+  <div class="fi"><svg class="ic"><use href="#i-contact"/></svg><span><b>Phone</b><span id="footPhones">-</span></span></div>
+  <div class="fi soc"><a id="whatsappLink" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ic"><use href="#i-whatsapp"/></svg></a><a id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a><a id="youtubeLink" href="#" target="_blank" rel="noopener" aria-label="YouTube" hidden><svg class="ic"><use href="#i-youtube"/></svg></a><span>Follow us</span></div>
+  <p class="copy"><span id="footerTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే</span> &middot; &copy; <span id="yr"></span> Sri Durga Malleswarla Ammavari Temple</p>
+</footer>
 
-    <section id="events" class="section textured">
-      <div class="section-inner">
-        <div class="section-heading">
-          <span class="section-kicker">JOIN US</span>
-          <h2>Upcoming Events</h2>
-          <p>Temple events and special celebrations.</p>
-        </div>
-        <div id="eventsList" class="cards-grid"></div>
-      </div>
-    </section>
+<div id="lightbox" class="lightbox" hidden><button id="lbClose" aria-label="Close">&times;</button><img id="lbImg" alt=""><p id="lbTitle"></p></div>
 
-    <section id="announcements" class="section announcement-section">
-      <div class="section-inner">
-        <div class="section-heading">
-          <span class="section-kicker">LATEST</span>
-          <h2>Announcements</h2>
-          <p>Important updates from the temple.</p>
-        </div>
-        <div id="newsList" class="news-list"></div>
-      </div>
-    </section>
-
-    <section id="gallery" class="section gallery-section">
-      <div class="section-inner">
-        <div class="section-heading">
-          <span class="section-kicker">MEMORIES</span>
-          <h2>Photo Gallery</h2>
-          <p>Moments from our temple and celebrations.</p>
-        </div>
-        <div id="galleryGrid" class="gallery-grid"></div>
-      </div>
-    </section>
-
-    <section id="location" class="section location-section">
-      <div class="section-inner location-card">
-        <div>
-          <span class="section-kicker">VISIT US</span>
-          <h2>Temple Location</h2>
-          <p id="addressText">Temple address will appear here.</p>
-          <a id="mapLink" class="gold-btn" href="#" target="_blank" rel="noopener noreferrer">📍 Open Google Maps</a>
-        </div>
-        <div class="location-art">🛕<br><span>🙏</span></div>
-      </div>
-    </section>
-
-    <section id="contact" class="section contact-section">
-      <div class="section-inner">
-        <div class="section-heading">
-          <span class="section-kicker">CONNECT</span>
-          <h2>Contact the Temple</h2>
-        </div>
-        <div class="contact-grid">
-          <a id="phone1" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
-          <a id="phone2" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
-          <a id="phone3" class="contact-card" href="#"><span>☎</span><div><small>Phone</small><strong>—</strong></div></a>
-          <a id="whatsappLink" class="contact-card" href="#" target="_blank" rel="noopener noreferrer"><span>💬</span><div><small>WhatsApp</small><strong>Temple Channel</strong></div></a>
-          <a id="instagramLink" class="contact-card" href="#" target="_blank" rel="noopener noreferrer"><span>📷</span><div><small>Instagram</small><strong>Follow Us</strong></div></a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div>🪔 <strong id="footerTempleName">శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం</strong></div>
-      <p id="footerTagline">అమ్మ దయ ఉంటే అన్ని ఉన్నట్లే 🙏🏻</p>
-    </footer>
-  </main>
-
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <button id="lightboxClose">×</button>
-    <img id="lightboxImage" alt="">
-    <p id="lightboxTitle"></p>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
