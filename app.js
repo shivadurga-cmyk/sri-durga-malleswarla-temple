@@ -37,7 +37,7 @@ function show(){
   window.scrollTo(0,0);
 }
 function setPhone(id,n){const el=$(id);el.href=n?`tel:${n}`:"#";el.querySelector("strong").textContent=n||"-";el.hidden=!n}
-function setLink(id,url){const el=$(id);if(url)el.href=url;else el.hidden=true}
+function setLink(id,url){const el=$(id);if(url){el.href=url;el.hidden=false}else el.hidden=true}
 
 async function loadSettings(){
   if(!sb)return;
@@ -57,7 +57,7 @@ async function loadSettings(){
   if(data.temple_history)$("historyText").textContent=data.temple_history;
   $("mapLink").href=data.google_maps||MAP_URL;
   [data.phone_1,data.phone_2,data.phone_3,data.phone_4,data.phone_5,data.phone_6].forEach((n,i)=>setPhone("phone"+(i+1),n));
-  $("footPhones").textContent=[data.phone_1,data.phone_2,data.phone_3].filter(Boolean).join("\n")||"-";
+  $("footPhones").textContent=[data.phone_1,data.phone_2,data.phone_3,data.phone_4,data.phone_5,data.phone_6].filter(Boolean).join("\n")||"-";
   setLink("whatsappLink",data.whatsapp_channel);setLink("instagramLink",data.instagram);setLink("youtubeLink",data.youtube);
   renderCards();
 }
