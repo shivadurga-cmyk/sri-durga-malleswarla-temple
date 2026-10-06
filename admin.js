@@ -11,7 +11,9 @@ const TABLES={
  gallery_photos:{label:"Gallery",order:["created_at",false],title:r=>r.title||"Photo",defaults:{sort_order:0},fields:[["title","Caption"],["image_url","Photo","photo"]]}
 };
 function fieldHtml([c,l,t],v){
- if(t==="photo")return `<label>${l}</label><img class="pv" ${v?`src="${esc(v)}"`:"hidden"}><input type="file" accept="image/*" data-photo="${c}"><input type="hidden" data-col="${c}" value="${esc(v)}">`;
+ if(t==="photo"){const fx=window.FOC?(window.FOC[c]||"50% 50%").match(/\d+/g):null;
+ const sl=a=>`<input type="range" min="0" max="100" value="${fx[a]}" data-fx="${c}" data-ax="${a?"y":"x"}" style="padding:0">`;
+ return `<label>${l}</label><img class="pv" style="height:170px;object-fit:cover;object-position:${fx?fx[0]+"% "+fx[1]+"%":"50% 50%"}" ${v?`src="${esc(v)}"`:"hidden"}><input type="file" accept="image/*" data-photo="${c}"><input type="hidden" data-col="${c}" value="${esc(v)}">${fx?`<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.8rem;margin-top:6px"><span>Move left / right</span>${sl(0)}<span>Move up / down</span>${sl(1)}</div>`:""}`}
  if(t==="area")return `<label>${l}</label><textarea data-col="${c}">${esc(v)}</textarea>`;
  return `<label>${l}</label><input data-col="${c}" type="${t||"text"}" value="${esc(v)}">`;
 }
@@ -22,6 +24,7 @@ async function upload(file){
  return {path,url:sb.storage.from("temple-gallery").getPublicUrl(path).data.publicUrl};
 }
 function wire(form){
+ form.querySelectorAll("[data-fx]").forEach(s=>s.oninput=()=>pos(form,s.dataset.fx));
  form.querySelectorAll("[data-photo]").forEach(inp=>inp.onchange=async()=>{
   const f=inp.files[0];if(!f)return;
   try{say("Uploading photo...");const r=await upload(f);
@@ -30,15 +33,16 @@ function wire(form){
   catch(e){say(e.message,1)}
  });
 }
+function pos(form,c){const g=a=>form.querySelector(`[data-fx="${c}"][data-ax=${a}]`).value;form.querySelector(`[data-photo="${c}"]`).previousElementSibling.style.objectPosition=g("x")+"% "+g("y")+"%"}
 function collect(form){const o={};form.querySelectorAll("[data-col]").forEach(e=>o[e.dataset.col]=e.value.trim()||null);return o}
 async function show(t){
  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
- const cfg=TABLES[t],p=$("panel");
+ const cfg=TABLES[t],p=$("panel");window.FOC=null;
  if(t==="site_settings"){
-  const {data}=await sb.from(t).select("*").eq("id",1).maybeSingle();const d=data||{};
+  const {data}=await sb.from(t).select("*").eq("id",1).maybeSingle();const d=data||{};try{window.FOC=JSON.parse(d.photo_focus||"{}")}catch(e){window.FOC={}}
   p.innerHTML=`<form id="f">${cfg.fields.map(f=>fieldHtml(f,d[f[0]])).join("")}<button class="btn">Save</button></form>`;
   const f=$("f");wire(f);
-  f.onsubmit=async e=>{e.preventDefault();const {error}=await sb.from(t).upsert({id:1,...collect(f),updated_at:new Date().toISOString()});say(error?error.message:"Saved",!!error)};
+  f.onsubmit=async e=>{e.preventDefault();const ph={};f.querySelectorAll("[data-fx][data-ax=x]").forEach(sx=>{const c=sx.dataset.fx;ph[c]=sx.value+"% "+f.querySelector(`[data-fx="${c}"][data-ax=y]`).value+"%"});const {error}=await sb.from(t).upsert({id:1,...collect(f),photo_focus:JSON.stringify(ph),updated_at:new Date().toISOString()});say(error?error.message:"Saved",!!error)};
   return;
  }
  const {data,error}=await sb.from(t).select("*").order(cfg.order[0],{ascending:cfg.order[1]});
