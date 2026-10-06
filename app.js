@@ -35,6 +35,26 @@ function show(){
 function setPhone(id,n){const el=$(id);el.href=n?`tel:${n}`:"#";el.querySelector("strong").textContent=n||"-";el.hidden=!n}
 function setLink(id,url){const el=$(id);if(url)el.href=url;else el.hidden=true}
 
+async function loadSettings(){
+  if(!sb)return;
+  const {data,error}=await sb.from("site_settings").select("*").eq("id",1).maybeSingle();
+  if(error||!data){error&&console.error(error);return}
+  if(data.temple_name){["heroTitle","brandName","footerName"].forEach(i=>$(i).textContent=data.temple_name)}
+  if(data.tagline){$("footerTagline").textContent=data.tagline;$("heroTagline").textContent=data.tagline}
+  ["events","announcements","gallery","contact"].forEach(k=>{if(data[k+"_image"])images[k]=data[k+"_image"]});
+  if(data.location_name){$("heroLocation").textContent=data.location_name;$("footLoc").textContent=data.location_name}
+  $("addressText").textContent=data.address||"Temple address will appear here.";
+  if(data.hero_image){const h=$("heroBg");h.style.setProperty("--img",`url("${data.hero_image}")`);h.classList.add("has-img")}
+  [["history","history_image"],["information","information_image"]].forEach(([k,c])=>{
+    if(data[c]){images[k]=data[c];const el=$(k+"Image");el.src=data[c];el.hidden=false}
+  });
+  if(data.temple_history)$("historyText").textContent=data.temple_history;
+  $("mapLink").href=data.google_maps||MAP_URL;
+  [data.phone_1,data.phone_2,data.phone_3].forEach((n,i)=>setPhone("phone"+(i+1),n));
+  $("footPhones").textContent=[data.phone_1,data.phone_2].filter(Boolean).join("\n")||"-";
+  setLink("whatsappLink",data.whatsapp_channel);setLink("instagramLink",data.instagram);setLink("youtubeLink",data.youtube);
+  renderCards();
+}
 async function loadEvents(){
   const box=$("eventsList");
   const {data,error}=await sb.from("events").select("id,title,description,event_date,start_time,end_time,location,image_url").eq("published",true).order("event_date").order("sort_order");
@@ -71,3 +91,4 @@ function init(){
   if(sb)loadSettings().then(()=>Promise.all([loadEvents(),loadNews(),loadGallery()]));
 }
 document.addEventListener("DOMContentLoaded",init);
+                        
