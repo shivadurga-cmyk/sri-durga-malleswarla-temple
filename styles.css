@@ -35,6 +35,13 @@ a{color:inherit;text-decoration:none}
 .card .pic{height:110px;border-radius:5px;background:linear-gradient(135deg,var(--m2),#2e0409) center/cover;color:var(--g);display:grid;place-items:center;font-size:2.2rem}
 .card h3{display:flex;align-items:center;gap:8px;margin:12px 4px 4px;font-size:.95rem;color:var(--m)}
 .card p{margin:0 4px 12px;font-size:.8rem;color:var(--muted);flex:1}
+.btn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin:0 4px 4px;padding:7px 14px;border-radius:5px;background:var(--m);color:#fff;font-size:.8rem;font-weight:500}
+.btn:hover{background:var(--m2)}
+.page{max-width:1000px;margin:0 auto;padding:44px 5% 60px}
+.page h2{margin:0;font:700 2rem Cinzel,serif;color:var(--m)}
+.lead{margin:0 0 28px;color:var(--muted);padding-bottom:12px;border-bottom:2px solid var(--g);width:fit-content}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:28px;align-items:start}
+.split img:not([hidden]),.wide{width:100%;border-radius:8px;max-height:340px;object-fit:cover}
 .wide{margin-bottom:24px}
 .prose{white-space:pre-line}
 .split:has(img[hidden]){grid-template-columns:1fr}
