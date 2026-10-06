@@ -22,6 +22,7 @@
 <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4 20l1.5-4A8 8 0 1 1 8 18.5zM9 9c0 3 3 6 6 6l1-2-2-1-1 .5c-1-.5-1.5-1-2-2l.5-1-1-2z"/></symbol>
 <symbol id="i-instagram" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8M17 7h.01"/></symbol>
 <symbol id="i-youtube" viewBox="0 0 24 24"><path d="M3 7h18v10H3zM10 9.5v5l4.5-2.5z"/></symbol>
+<symbol id="i-donate" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></symbol>
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
 </defs></svg>
 
@@ -75,6 +76,31 @@
     <h2>Gallery</h2><p class="lead">Divine moments</p><div id="galleryGrid" class="gallery"></div>
   </section>
 
+  <section class="view page" id="v-donate" hidden>
+    <h2>Donate</h2><p class="lead">Offer your seva to Ammavari</p>
+    <div id="dStep1" class="box">
+      <label for="dName">Name</label><input id="dName" autocomplete="name">
+      <label for="dGothram">Gothram</label><input id="dGothram">
+      <label for="dMobile">Mobile number</label><input id="dMobile" type="tel" inputmode="numeric" autocomplete="tel">
+      <label for="dAddr">Address</label><textarea id="dAddr" rows="3"></textarea>
+      <button class="btn" id="dGo" type="button">Donate</button>
+    </div>
+    <div id="dStep2" class="box" hidden>
+      <h3>Sri Durga Malleswarla Ammavari Temple</h3>
+      <img id="dQr" class="qr" alt="Donation QR code" hidden>
+      <div id="dBank" class="prose"></div>
+      <a id="dUpi" class="btn" hidden>Pay with UPI app</a>
+      <p style="margin-top:16px">After paying, enter the details below to get your donation slip.</p>
+      <label for="dAmt">Amount paid (Rs.)</label><input id="dAmt" type="number" min="1" inputmode="numeric">
+      <label for="dUtr">UPI transaction ID / reference number</label><input id="dUtr">
+      <button class="btn" id="dPaid" type="button">I have paid - get my slip</button>
+    </div>
+    <div id="dStep3" class="box" hidden>
+      <canvas id="dSlip"></canvas><br>
+      <a id="dDl" class="btn" download="donation-slip.png" href="#">Download slip</a>
+    </div>
+  </section>
+
   <section class="view page" id="v-contact" hidden>
     <h2>Contact</h2><p class="lead">Get in touch</p>
     <div class="box addr"><svg class="ic"><use href="#i-pin"/></svg><div><p id="addressText">Temple address will appear here.</p><a id="mapLink" class="btn" target="_blank" rel="noopener" href="#">Open in Google Maps</a></div></div>
@@ -82,6 +108,9 @@
       <a id="phone1" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
       <a id="phone2" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
       <a id="phone3" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+      <a id="phone4" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+      <a id="phone5" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
+      <a id="phone6" class="box call" href="#"><svg class="ic"><use href="#i-contact"/></svg><span><small>Phone</small><strong>-</strong></span></a>
     </div>
   </section>
 </main>
