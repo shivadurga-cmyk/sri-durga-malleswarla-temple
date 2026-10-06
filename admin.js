@@ -2,13 +2,14 @@ const sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_K
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 function say(t,bad){const m=$("msg");m.textContent=t;m.className=bad?"bad":"ok";m.hidden=false;clearTimeout(say.t);say.t=setTimeout(()=>m.hidden=true,3500)}
-const SITE=[["temple_name","Temple name (Telugu)"],["tagline","Tagline (shown under the name)"],["location_name","Place (e.g. Seethayyapeta, Chintapaka)"],["address","Full address","area"],["google_maps","Google Maps link"],["temple_history","Temple history","area"],["phone_1","Phone 1"],["phone_2","Phone 2"],["phone_3","Phone 3"],["whatsapp_channel","WhatsApp link"],["instagram","Instagram link"],["youtube","YouTube link"],
-["hero_image","Home banner photo","photo"],["history_image","History card and page photo","photo"],["information_image","Temple Info card and page photo","photo"],["events_image","Events card photo","photo"],["announcements_image","Announcements card photo","photo"],["gallery_image","Gallery card photo","photo"],["contact_image","Contact card photo","photo"]];
+const SITE=[["temple_name","Temple name (Telugu)"],["tagline","Tagline (shown under the name)"],["location_name","Place (e.g. Seethayyapeta, Chintapaka)"],["address","Full address","area"],["google_maps","Google Maps link"],["temple_history","Temple history","area"],["phone_1","Phone 1"],["phone_2","Phone 2"],["phone_3","Phone 3"],["phone_4","Phone 4"],["phone_5","Phone 5"],["phone_6","Phone 6"],["whatsapp_channel","WhatsApp link"],["instagram","Instagram link"],["youtube","YouTube link"],["upi_id","UPI ID (for donations)"],["bank_account_name","Bank account name"],["bank_name","Bank name"],["account_no","Account number"],["ifsc","IFSC code"],["sheet_url","Google Sheet link (Apps Script web app URL)"],
+["hero_image","Home banner photo","photo"],["history_image","History card and page photo","photo"],["information_image","Temple Info card and page photo","photo"],["events_image","Events card photo","photo"],["announcements_image","Announcements card photo","photo"],["gallery_image","Gallery card photo","photo"],["contact_image","Contact card photo","photo"],["qr_image","Donation QR code photo","photo"],["donate_image","Donate card photo","photo"]];
 const TABLES={
  site_settings:{label:"Site details",fields:SITE},
  events:{label:"Events",order:["event_date",true],title:r=>`${r.event_date||""}  ${r.title}`,defaults:{sort_order:0},fields:[["title","Title"],["description","Description","area"],["event_date","Date","date"],["start_time","Start time","time"],["end_time","End time","time"],["location","Place"],["image_url","Photo","photo"]]},
  announcements:{label:"Announcements",order:["created_at",false],title:r=>r.title,fields:[["title","Title"],["content","Text","area"]]},
- gallery_photos:{label:"Gallery",order:["created_at",false],title:r=>r.title||"Photo",defaults:{sort_order:0},fields:[["title","Caption"],["image_url","Photo","photo"]]}
+ gallery_photos:{label:"Gallery",order:["created_at",false],title:r=>r.title||"Photo",defaults:{sort_order:0},fields:[["title","Caption"],["image_url","Photo","photo"]]},
+ donations:{label:"Donations",nopub:1,order:["created_at",false],title:r=>`${(r.created_at||"").slice(0,10)} ${r.name} Rs.${r.amount} UTR ${r.utr} [${r.status}]`,fields:[["status","Status (pending / verified)"],["name","Name"],["gothram","Gothram"],["mobile","Mobile"],["address","Address","area"],["amount","Amount","number"],["utr","UPI transaction ID"]]}
 };
 function fieldHtml([c,l,t],v){
  if(t==="photo"){const fx=window.FOC?(window.FOC[c]||"50% 50%").match(/\d+/g):null;
@@ -50,12 +51,12 @@ async function show(t){
  let edit=null;
  const draw=()=>{
   const r=edit||{};
-  p.innerHTML=`<form id="f"><h3 style="margin:0">${edit?"Edit":"Add new"}</h3>${cfg.fields.map(f=>fieldHtml(f,r[f[0]])).join("")}<label><input type="checkbox" id="pub" ${r.published===false?"":"checked"}> Show on website</label><button class="btn">${edit?"Save changes":"Add"}</button>${edit?'<button type="button" class="btn alt" id="cx">Cancel</button>':""}</form>`
-  +data.map(x=>`<div class="row"><span>${x.published?"":"(hidden) "}${esc(cfg.title(x))}</span><span><button class="btn alt" data-e="${x.id}">Edit</button><button class="btn alt" data-d="${x.id}">Delete</button></span></div>`).join("");
+  p.innerHTML=`<form id="f"><h3 style="margin:0">${edit?"Edit":"Add new"}</h3>${cfg.fields.map(f=>fieldHtml(f,r[f[0]])).join("")}${cfg.nopub?"":`<label><input type="checkbox" id="pub" ${r.published===false?"":"checked"}> Show on website</label>`}<button class="btn">${edit?"Save changes":"Add"}</button>${edit?'<button type="button" class="btn alt" id="cx">Cancel</button>':""}</form>`
+  +data.map(x=>`<div class="row"><span>${cfg.nopub||x.published?"":"(hidden) "}${esc(cfg.title(x))}</span><span><button class="btn alt" data-e="${x.id}">Edit</button><button class="btn alt" data-d="${x.id}">Delete</button></span></div>`).join("");
   const f=$("f");wire(f);
   if($("cx"))$("cx").onclick=()=>{edit=null;draw()};
   f.onsubmit=async e=>{e.preventDefault();
-   const row={...collect(f),published:$("pub").checked};
+   const row={...collect(f)};if(!cfg.nopub)row.published=$("pub").checked;
    if(t==="gallery_photos"&&f.dataset.path)row.storage_path=f.dataset.path;
    const q=edit?sb.from(t).update(row).eq("id",edit.id):sb.from(t).insert({...cfg.defaults,...row});
    const {error}=await q;if(error)return say(error.message,1);say("Saved");show(t)};
