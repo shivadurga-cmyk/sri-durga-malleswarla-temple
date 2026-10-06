@@ -11,9 +11,10 @@ const PAGES=[
  ["events","Events","Upcoming Programs","Stay updated with festivals, poojas and special programs.","View Events"],
  ["announcements","Announcements","Latest Updates","Get the latest news and important information from the temple.","View All"],
  ["gallery","Gallery","Divine Moments","Explore photos of the temple, deities and festival celebrations.","View Gallery"],
+ ["donate","Donate","Offer Your Seva","Offer your seva to Ammavari with a UPI donation and get your slip.","Donate Now"],
  ["contact","Contact","Get In Touch","Visit us, call us or get directions. We are always here to help.","Get in Touch"]
 ];
-const images={},focus={};
+const images={},focus={};let S={};
 function fail(m){const b=document.createElement("div");b.style.cssText="background:#b00020;color:#fff;padding:10px 14px;font:14px sans-serif";b.textContent="Site error: "+m;document.body.prepend(b)}
 addEventListener("error",e=>fail(e.message));
 addEventListener("unhandledrejection",e=>fail((e.reason&&e.reason.message)||e.reason));
@@ -42,11 +43,11 @@ async function loadSettings(){
   if(!sb)return;
   const {data,error}=await sb.from("site_settings").select("*").eq("id",1).maybeSingle();
   if(error||!data){if(error)fail(error.message);else fail("site_settings row 1 not found");return}
-  let foc={};try{foc=JSON.parse(data.photo_focus||"{}")}catch(e){}
-  ;["history","information","events","announcements","gallery","contact"].forEach(k=>focus[k]=foc[k+"_image"]);
+  S=data;let foc={};try{foc=JSON.parse(data.photo_focus||"{}")}catch(e){}
+  ;["history","information","events","announcements","gallery","contact","donate"].forEach(k=>focus[k]=foc[k+"_image"]);
   if(data.temple_name){["heroTitle","brandName","footerName"].forEach(i=>$(i).textContent=data.temple_name)}
   if(data.tagline){$("footerTagline").textContent=data.tagline;$("heroTagline").textContent=data.tagline}
-  ["events","announcements","gallery","contact"].forEach(k=>{if(data[k+"_image"])images[k]=data[k+"_image"]});
+  ["events","announcements","gallery","contact","donate"].forEach(k=>{if(data[k+"_image"])images[k]=data[k+"_image"]});
   if(data.location_name){$("heroLocation").textContent=data.location_name;$("footLoc").textContent=data.location_name}
   $("addressText").textContent=data.address||"Temple address will appear here.";
   if(data.hero_image){const h=$("heroBg");h.style.setProperty("--img",`url("${data.hero_image}")`);h.classList.add("has-img");h.style.backgroundPosition=foc.hero_image||"center"}
@@ -55,8 +56,8 @@ async function loadSettings(){
   });
   if(data.temple_history)$("historyText").textContent=data.temple_history;
   $("mapLink").href=data.google_maps||MAP_URL;
-  [data.phone_1,data.phone_2,data.phone_3].forEach((n,i)=>setPhone("phone"+(i+1),n));
-  $("footPhones").textContent=[data.phone_1,data.phone_2].filter(Boolean).join("\n")||"-";
+  [data.phone_1,data.phone_2,data.phone_3,data.phone_4,data.phone_5,data.phone_6].forEach((n,i)=>setPhone("phone"+(i+1),n));
+  $("footPhones").textContent=[data.phone_1,data.phone_2,data.phone_3].filter(Boolean).join("\n")||"-";
   setLink("whatsappLink",data.whatsapp_channel);setLink("instagramLink",data.instagram);setLink("youtubeLink",data.youtube);
   renderCards();
 }
@@ -86,7 +87,52 @@ async function loadGallery(){
   box.onclick=e=>{const f=e.target.closest("figure");if(!f)return;const p=list[+f.dataset.i];
     $("lbImg").src=p.image_url;$("lbTitle").textContent=p.title||"";$("lightbox").hidden=false};
 }
+function wrap(x,t,w){const L=[];let l="";String(t).split(/\s+/).forEach(wd=>{const n=l?l+" "+wd:wd;if(x.measureText(n).width>w&&l){L.push(l);l=wd}else l=n});if(l)L.push(l);return L}
+async function drawSlip(d){
+  const c=$("dSlip"),x=c.getContext("2d");c.width=800;c.height=1040;
+  await Promise.all(['700 30px "Noto Serif Telugu"','600 22px Poppins'].map(f=>document.fonts.load(f,"అa")));
+  x.fillStyle="#fffdf8";x.fillRect(0,0,800,1040);x.fillStyle="#4a0a14";x.fillRect(0,0,800,300);
+  const img=await new Promise(r=>{if(!S.hero_image)return r(null);const i=new Image();i.crossOrigin="anonymous";i.onload=()=>r(i);i.onerror=()=>r(null);i.src=S.hero_image});
+  if(img){x.save();x.beginPath();x.arc(400,95,70,0,7);x.clip();const s=Math.max(140/img.width,140/img.height);x.drawImage(img,400-img.width*s/2,95-img.height*s/2,img.width*s,img.height*s);x.restore();x.strokeStyle="#e0b45a";x.lineWidth=4;x.beginPath();x.arc(400,95,72,0,7);x.stroke()}
+  x.textAlign="center";x.fillStyle="#e0b45a";x.font='700 30px "Noto Serif Telugu",serif';
+  wrap(x,S.temple_name||"",740).forEach((l,i)=>x.fillText(l,400,205+i*42));
+  x.fillStyle="#f6e3b4";x.font='600 20px Poppins,sans-serif';x.fillText("SRI DURGA MALLESWARLA AMMAVARI DEVASTHANAM",400,262);
+  x.fillStyle="#4a0a14";x.font='600 24px Poppins,sans-serif';x.fillText("DONATION SLIP",400,350);
+  x.textAlign="left";let y=410;
+  const row=(k,v,big)=>{x.fillStyle="#650e19";x.font='600 20px Poppins,sans-serif';x.fillText(k,50,y);x.fillStyle="#2c1712";x.font=(big?'700 30px':'500 21px')+' "Noto Sans Telugu",Poppins,sans-serif';
+    wrap(x,v,480).forEach((l,i)=>{x.fillText(l,270,y+i*30);if(i)y+=30});y+=big?58:50};
+  row("Receipt no.",d.receipt_no);row("Date",new Date().toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"}));
+  row("Donor name",d.name);row("Gothram",d.gothram||"-");row("Mobile",d.mobile);row("Address",d.address);
+  row("Amount","Rs. "+d.amount,1);row("UPI ref. no.",d.utr);
+  x.textAlign="center";x.fillStyle="#6f5a4e";x.font='400 15px Poppins,sans-serif';x.fillText("Subject to confirmation of payment by the temple.",400,y+4);
+  x.fillStyle="#4a0a14";x.fillRect(0,930,800,110);x.fillStyle="#e0b45a";x.font='700 22px "Noto Serif Telugu",serif';
+  wrap(x,"అమ్మ దయ మీకు, మీ కుటుంబ సభ్యులందరికీ ఉండాలని కోరుకుంటున్నాము",740).forEach((l,i)=>x.fillText(l,400,980+i*34));
+  $("dDl").href=c.toDataURL("image/png");$("dDl").download=d.receipt_no+".png";
+}
+function initDonate(){
+  const v=id=>$(id).value.trim(),step=n=>[1,2,3].forEach(i=>$("dStep"+i).hidden=i!==n);
+  $("dGo").onclick=()=>{
+    const m=v("dMobile").replace(/\D/g,"").slice(-10);
+    if(!v("dName")||m.length<10||!v("dAddr"))return alert("Please enter your name, 10-digit mobile number and address.");
+    $("dBank").innerHTML=[["Account name",S.bank_account_name],["Bank",S.bank_name],["Account no.",S.account_no],["IFSC",S.ifsc],["UPI ID",S.upi_id]].filter(r=>r[1]).map(r=>`<p style="margin:2px 0"><b>${r[0]}:</b> ${esc(r[1])}</p>`).join("")||"<p>Payment details will be added soon.</p>";
+    $("dQr").hidden=!S.qr_image;if(S.qr_image)$("dQr").src=S.qr_image;
+    $("dUpi").hidden=!S.upi_id;if(S.upi_id)$("dUpi").href=`upi://pay?pa=${encodeURIComponent(S.upi_id)}&pn=${encodeURIComponent("Sri Durga Malleswarla Ammavari Temple")}&cu=INR`;
+    step(2);scrollTo(0,0);
+  };
+  $("dPaid").onclick=async()=>{
+    const amt=+v("dAmt"),utr=v("dUtr");
+    if(!(amt>0)||utr.length<6)return alert("Please enter the amount paid and the UPI transaction ID.");
+    const d={receipt_no:"DS"+new Date().toISOString().slice(2,10).replace(/-/g,"")+Math.floor(1000+Math.random()*9000),name:v("dName"),gothram:v("dGothram"),mobile:v("dMobile"),address:v("dAddr"),amount:amt,utr,status:"pending"};
+    $("dPaid").disabled=true;
+    const {error}=await sb.from("donations").insert(d);
+    $("dPaid").disabled=false;
+    if(error)return alert("Could not save your donation. Please try again. ("+error.message+")");
+    if(S.sheet_url)fetch(S.sheet_url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(d)}).catch(()=>{});
+    await drawSlip(d);step(3);scrollTo(0,0);
+  };
+}
 function init(){
+  initDonate();
   build();show();
   addEventListener("hashchange",show);
   $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
