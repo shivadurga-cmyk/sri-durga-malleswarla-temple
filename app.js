@@ -14,6 +14,9 @@ const PAGES=[
  ["contact","Contact","Get In Touch","Visit us, call us or get directions. We are always here to help.","Get in Touch"]
 ];
 const images={};
+function fail(m){const b=document.createElement("div");b.style.cssText="background:#b00020;color:#fff;padding:10px 14px;font:14px sans-serif";b.textContent="Site error: "+m;document.body.prepend(b)}
+addEventListener("error",e=>fail(e.message));
+addEventListener("unhandledrejection",e=>fail((e.reason&&e.reason.message)||e.reason));
 
 function build(){
   $("nav").innerHTML=`<a href="#home" data-p="home">${icon("home")}Home</a>`+PAGES.map(p=>`<a href="#${p[0]}" data-p="${p[0]}">${icon(p[0])}${p[1]}</a>`).join("");
@@ -38,7 +41,7 @@ function setLink(id,url){const el=$(id);if(url)el.href=url;else el.hidden=true}
 async function loadSettings(){
   if(!sb)return;
   const {data,error}=await sb.from("site_settings").select("*").eq("id",1).maybeSingle();
-  if(error||!data){error&&console.error(error);return}
+  if(error||!data){if(error)fail(error.message);else fail("site_settings row 1 not found");return}
   if(data.temple_name){["heroTitle","brandName","footerName"].forEach(i=>$(i).textContent=data.temple_name)}
   if(data.tagline){$("footerTagline").textContent=data.tagline;$("heroTagline").textContent=data.tagline}
   ["events","announcements","gallery","contact"].forEach(k=>{if(data[k+"_image"])images[k]=data[k+"_image"]});
@@ -88,7 +91,6 @@ function init(){
   const close=()=>$("lightbox").hidden=true;
   $("lbClose").onclick=close;$("lightbox").onclick=e=>{if(e.target.id==="lightbox")close()};
   addEventListener("keydown",e=>{if(e.key==="Escape")close()});
-  if(sb)loadSettings().then(()=>Promise.all([loadEvents(),loadNews(),loadGallery()]));
+  if(!sb)fail("Cannot connect to database. Check config.js");else loadSettings().catch(()=>{}).then(()=>Promise.all([loadEvents(),loadNews(),loadGallery()]));
 }
 document.addEventListener("DOMContentLoaded",init);
-                        
