@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Website QR</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@700&family=Poppins:wght@500&display=swap">
+<style>
+body{margin:0;font-family:Poppins,sans-serif;background:#fdf6e6;text-align:center;padding:20px}
+h2{color:#4a0a14}canvas{max-width:100%;height:auto;border:1px solid #e0b45a;border-radius:8px}
+input{width:min(440px,92%);padding:10px;border:1px solid #d9c9a0;border-radius:6px;font:inherit;margin-bottom:14px}
+.btn{display:inline-block;margin:14px 6px;padding:11px 22px;background:#4a0a14;color:#fff;border-radius:6px;text-decoration:none}
+</style></head><body>
+<h2>Website QR code</h2>
+<input id="u" aria-label="Website address"><br>
+<canvas id="c" width="800" height="1000"></canvas><br>
+<a id="dl" class="btn" download="temple-website-qr.png" href="#">Download QR</a>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+const u=document.getElementById("u"),c=document.getElementById("c"),x=c.getContext("2d");
+u.value=location.origin+"/";
+function wrap(t,w){const L=[];let l="";t.split(/\s+/).forEach(wd=>{const n=l?l+" "+wd:wd;if(x.measureText(n).width>w&&l){L.push(l);l=wd}else l=n});if(l)L.push(l);return L}
+async function draw(){
+  await Promise.all(['700 34px "Noto Serif Telugu"','500 22px Poppins'].map(f=>document.fonts.load(f,"అa")));
+  x.fillStyle="#4a0a14";x.fillRect(0,0,800,1000);
+  x.strokeStyle="#e0b45a";x.lineWidth=6;x.strokeRect(20,20,760,960);
+  x.textAlign="center";x.fillStyle="#e0b45a";x.font='700 34px "Noto Serif Telugu",serif';
+  wrap("శ్రీ శ్రీ శ్రీ దుర్గామల్లేశ్వర్ల అమ్మవారి ఆలయం",700).forEach((l,i)=>x.fillText(l,400,95+i*48));
+  x.fillStyle="#f6e3b4";x.font='500 22px Poppins,sans-serif';x.fillText("SRI DURGA MALLESWARLA AMMAVARI TEMPLE",400,200);
+  const t=u.value.trim()||location.origin+"/",qr=qrcode(0,"H");qr.addData(t);qr.make();
+  const n=qr.getModuleCount(),s=Math.floor(560/n),sz=s*n,bx=(800-sz-60)/2;
+  x.fillStyle="#fff";x.fillRect(bx,250,sz+60,sz+60);
+  x.fillStyle="#4a0a14";
+  for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(qr.isDark(r,k))x.fillRect(bx+30+k*s,280+r*s,s,s);
+  x.fillStyle="#e0b45a";x.font='500 26px Poppins,sans-serif';x.fillText("Scan to visit our website",400,250+sz+60+50);
+  x.fillStyle="#f6e3b4";x.font='500 20px Poppins,sans-serif';x.fillText(t.length>52?t.slice(0,50)+"...":t,400,250+sz+60+86);
+  document.getElementById("dl").href=c.toDataURL("image/png");
+}
+u.oninput=draw;draw();
+</script></body></html>
