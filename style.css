@@ -96,3 +96,6 @@ body{background-color:#f8e6bd;background-image:url("data:image/svg+xml,%3Csvg%20
 .card{border:1px solid var(--g);box-shadow:0 6px 18px #0006}
 .foot{background-color:var(--m);background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='120'%20height='120'%20viewBox='0%200%20120%20120'%20fill='none'%20stroke='%23e0b45a'%20stroke-opacity='0.28'%20stroke-width='1.2'%3E%3Ccircle%20cx='60'%20cy='60'%20r='7'/%3E%3Ccircle%20cx='60'%20cy='60'%20r='21'/%3E%3Ccircle%20cx='60'%20cy='60'%20r='37'/%3E%3Cpath%20d='M60%2020c9%2011%209%2018%200%2027-9-9-9-16%200-27zM60%20100c9-11%209-18%200-27-9%209-9%2016%200%2027zM20%2060c11-9%2018-9%2027%200-9%209-16%209-27%200zM100%2060c-11-9-18-9-27%200%209%209%2016%209%2027%200z'/%3E%3Cpath%20d='M32%2032c10%203%2014%209%2014%2014-6%200-11-4-14-14zM88%2032c-3%2010-9%2014-14%2014%200-6%204-11%2014-14zM32%2088c3-10%209-14%2014-14%200%206-4%2011-14%2014zM88%2088c-10-3-14-9-14-14%206%200%2011%204%2014%2014z'/%3E%3C/svg%3E")}
 .page .box,.page .row{background:#fffaf0;border-color:#e0b45a88}
+.gallery .play{position:absolute;inset:0;display:grid;place-items:center;font-size:2.6rem;color:#fff;background:#0003;pointer-events:none}
+.gallery .aud{background:#fffaf0;border:1px solid var(--g);padding:14px;cursor:default}
+.gallery .aud audio{width:100%;margin-top:8px}
