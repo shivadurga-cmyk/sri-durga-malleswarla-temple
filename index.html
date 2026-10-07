@@ -83,17 +83,18 @@
       <label for="dGothram">Gothram</label><input id="dGothram">
       <label for="dMobile">Mobile number</label><input id="dMobile" type="tel" inputmode="numeric" autocomplete="tel">
       <label for="dAddr">Address</label><textarea id="dAddr" rows="3"></textarea>
+      <label for="dAmt">Donation amount (Rs.)</label><input id="dAmt" type="number" min="1" inputmode="numeric">
       <button class="btn" id="dGo" type="button">Donate</button>
     </div>
     <div id="dStep2" class="box" hidden>
       <h3>Sri Durga Malleswarla Ammavari Temple</h3>
       <img id="dQr" class="qr" alt="Donation QR code" hidden>
       <div id="dBank" class="prose"></div>
-      <a id="dUpi" class="btn" hidden>Pay with UPI app</a>
-      <p style="margin-top:16px">After paying, enter the details below to get your donation slip.</p>
-      <label for="dAmt">Amount paid (Rs.)</label><input id="dAmt" type="number" min="1" inputmode="numeric">
-      <label for="dUtr">UPI transaction ID / reference number</label><input id="dUtr">
-      <button class="btn" id="dPaid" type="button">I have paid - get my slip</button>
+      <p id="dAmtShow" style="font-weight:600;margin:12px 0 4px"></p>
+      <div id="dApps" hidden><p style="margin:8px 0 4px"><b>Pay with UPI app</b> (choose your app)</p><div class="apps" id="dAppList"></div></div>
+      <p style="margin-top:16px">If you pay with one of the UPI app buttons above, your slip appears automatically when you come back to this page. If you paid by scanning the QR from another phone, tap the button below.</p>
+      <label for="dUtr">UPI transaction ID (optional)</label><input id="dUtr">
+      <button class="btn" id="dPaid" type="button">Paid by QR? Get my slip</button>
     </div>
     <div id="dStep3" class="box" hidden>
       <canvas id="dSlip"></canvas><br>
