@@ -78,15 +78,22 @@ async function loadNews(){
 }
 async function loadGallery(){
   const box=$("galleryGrid");
-  const {data,error}=await sb.from("gallery_photos").select("id,title,image_url").eq("published",true).order("sort_order").order("created_at",{ascending:false});
+  const {data,error}=await sb.from("gallery_photos").select("id,title,image_url,media_type,media_url").eq("published",true).order("sort_order").order("created_at",{ascending:false});
   if(error){console.error(error);box.innerHTML="<p>Gallery is temporarily unavailable.</p>";return}
   const list=data||[];
   if(!list.length){box.innerHTML='<div class="box"><h3>No photos yet</h3><p>Temple photographs will appear here.</p></div>';return}
-  if(!images.gallery){images.gallery=list[0].image_url;renderCards()}
-  box.innerHTML=list.map((p,i)=>`<figure data-i="${i}"><img src="${esc(p.image_url)}" alt="${esc(p.title||"Temple photo")}" loading="lazy">${p.title?`<figcaption>${esc(p.title)}</figcaption>`:""}</figure>`).join("");
-  box.onclick=e=>{const f=e.target.closest("figure");if(!f)return;const p=list[+f.dataset.i];
-    $("lbImg").src=p.image_url;$("lbTitle").textContent=p.title||"";$("lightbox").hidden=false};
+  const first=list.find(p=>p.image_url);if(!images.gallery&&first){images.gallery=first.image_url;renderCards()}
+  box.innerHTML=list.map((p,i)=>{
+    const t=p.media_type||"photo",cap=p.title?`<figcaption>${esc(p.title)}</figcaption>`:"";
+    if(t==="audio")return `<figure class="aud"><b>${esc(p.title||"Audio")}</b><audio controls preload="none" src="${esc(p.media_url)}"></audio></figure>`;
+    return `<figure data-i="${i}"><img src="${esc(p.image_url)}" alt="${esc(p.title||"Temple photo")}" loading="lazy">${t==="video"?'<span class="play">&#9654;</span>':""}${cap}</figure>`}).join("");
+  box.onclick=e=>{const f=e.target.closest("figure[data-i]");if(!f)return;const p=list[+f.dataset.i],id=p.media_type==="video"?ytId(p.media_url):null;
+    $("lbTitle").textContent=p.title||"";
+    if(id){$("lbImg").hidden=true;$("lbEmbed").innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen style="width:min(92vw,720px);aspect-ratio:16/9;border:0;border-radius:6px"></iframe>`}
+    else{$("lbEmbed").innerHTML="";$("lbImg").hidden=false;$("lbImg").src=p.image_url}
+    $("lightbox").hidden=false};
 }
+const ytId=u=>{const m=String(u||"").match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:null};
 function wrap(x,t,w){const L=[];let l="";String(t).split(/\s+/).forEach(wd=>{const n=l?l+" "+wd:wd;if(x.measureText(n).width>w&&l){L.push(l);l=wd}else l=n});if(l)L.push(l);return L}
 async function drawSlip(d){
   const c=$("dSlip"),x=c.getContext("2d");c.width=800;c.height=1040;
@@ -136,7 +143,7 @@ function init(){
   build();show();
   addEventListener("hashchange",show);
   $("burger").onclick=()=>{const o=$("nav").classList.toggle("open");$("burger").setAttribute("aria-expanded",o)};
-  const close=()=>$("lightbox").hidden=true;
+  const close=()=>{$("lightbox").hidden=true;$("lbEmbed").innerHTML=""};
   $("lbClose").onclick=close;$("lightbox").onclick=e=>{if(e.target.id==="lightbox")close()};
   addEventListener("keydown",e=>{if(e.key==="Escape")close()});
   if(!sb)fail("Cannot connect to database. Check config.js");else loadSettings().catch(()=>{}).then(()=>Promise.all([loadEvents(),loadNews(),loadGallery()]));
