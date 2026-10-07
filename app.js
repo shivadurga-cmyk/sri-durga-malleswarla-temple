@@ -86,11 +86,15 @@ async function loadGallery(){
   box.innerHTML=list.map((p,i)=>{
     const t=p.media_type||"photo",cap=p.title?`<figcaption>${esc(p.title)}</figcaption>`:"";
     if(t==="audio")return `<figure class="aud"><b>${esc(p.title||"Audio")}</b><audio controls preload="none" src="${esc(p.media_url)}"></audio></figure>`;
-    return `<figure data-i="${i}"><img src="${esc(p.image_url)}" alt="${esc(p.title||"Temple photo")}" loading="lazy">${t==="video"?'<span class="play">&#9654;</span>':""}${cap}</figure>`}).join("");
-  box.onclick=e=>{const f=e.target.closest("figure[data-i]");if(!f)return;const p=list[+f.dataset.i],id=p.media_type==="video"?ytId(p.media_url):null;
-    $("lbTitle").textContent=p.title||"";
-    if(id){$("lbImg").hidden=true;$("lbEmbed").innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen style="width:min(92vw,720px);aspect-ratio:16/9;border:0;border-radius:6px"></iframe>`}
-    else{$("lbEmbed").innerHTML="";$("lbImg").hidden=false;$("lbImg").src=p.image_url}
+    return `<figure data-i="${i}">${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title||"Temple photo")}" loading="lazy">`:'<div style="height:170px;background:linear-gradient(135deg,#650e19,#2e0409)"></div>'}${t==="video"?'<span class="play">&#9654;</span>':""}${cap}</figure>`}).join("");
+  box.onclick=e=>{const f=e.target.closest("figure[data-i]");if(!f)return;
+    const p=list[+f.dataset.i],isV=p.media_type==="video",u=String(p.media_url||""),yt=isV?ytId(u):null,
+      ig=isV?u.match(/instagram\.com\/(reels?|p|tv)\/([\w-]+)/):null,fl=isV&&/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u);
+    $("lbTitle").textContent=p.title||"";$("lbEmbed").innerHTML="";$("lbImg").hidden=true;
+    if(yt)$("lbEmbed").innerHTML=`<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1" allow="autoplay;encrypted-media;picture-in-picture" allowfullscreen style="width:min(92vw,720px);aspect-ratio:16/9;border:0;border-radius:6px"></iframe>`;
+    else if(ig)$("lbEmbed").innerHTML=`<iframe src="https://www.instagram.com/${ig[1].replace("reels","reel")}/${ig[2]}/embed" allowfullscreen style="width:min(92vw,420px);height:min(78vh,600px);border:0;border-radius:6px;background:#fff"></iframe>`;
+    else if(fl)$("lbEmbed").innerHTML=`<video src="${esc(u)}" controls autoplay playsinline style="max-width:92vw;max-height:78vh;border-radius:6px"></video>`;
+    else{$("lbImg").hidden=false;$("lbImg").src=p.image_url}
     $("lightbox").hidden=false};
 }
 const ytId=u=>{const m=String(u||"").match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:null};
