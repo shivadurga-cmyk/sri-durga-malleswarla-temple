@@ -130,7 +130,7 @@ function initDonate(){
     const amt=+v("dAmt");$("dAmtShow").textContent="Amount: Rs. "+amt;
     $("dApps").hidden=!S.upi_id;
     if(S.upi_id){const q=`?pa=${encodeURIComponent(S.upi_id)}&pn=${encodeURIComponent("Sri Durga Malleswarla Ammavari Temple")}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent("Temple donation")}`;
-      $("dAppList").innerHTML=[["PhonePe","phonepe://pay"],["Google Pay","tez://upi/pay"],["Paytm","paytmmp://pay"],["BHIM / Other UPI apps","upi://pay"]].map(a=>`<a class="btn" href="${a[1]+q}">${a[0]}</a>`).join("")}
+      $("dAppList").innerHTML=`<a class="btn" href="upi://pay${q}">Pay with any UPI app</a>`}
     step(2);scrollTo(0,0);
   };
   const mk=()=>({receipt_no:"DS"+new Date().toISOString().slice(2,10).replace(/-/g,"")+Math.floor(1000+Math.random()*9000),name:v("dName"),gothram:v("dGothram"),mobile:v("dMobile"),address:v("dAddr"),amount:+v("dAmt"),utr:v("dUtr"),status:"pending"});
